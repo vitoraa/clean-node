@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --watch",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage"
