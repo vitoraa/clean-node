@@ -7,4 +7,10 @@ describe('Compare Field Validation', () => {
     const error = sut.validate({ field: 'any', fieldToCompare: 'another' })
     expect(error).toEqual(new InvalidParamError('fieldToCompare'))
   })
+
+  test('Should return nothing if validation succeeds', () => {
+    const sut = new CompareFieldValidation('field', 'fieldToCompare')
+    const error = sut.validate({ field: 'any', fieldToCompare: 'any' })
+    expect(error).toBeFalsy()
+  })
 })
