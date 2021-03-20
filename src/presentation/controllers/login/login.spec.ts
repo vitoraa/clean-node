@@ -7,6 +7,10 @@ class LoginController implements Controller {
     if (!httpRequest.body.email) {
       return badRequest(new MissingParamError('email'))
     }
+
+    if (!httpRequest.body.password) {
+      return badRequest(new MissingParamError('password'))
+    }
     return await new Promise(resolve => resolve(null))
   }
 }
@@ -25,5 +29,16 @@ describe('Login Controller', () => {
     }
     const httResponse = await sut.handle(httpRequest)
     expect(httResponse).toEqual(badRequest(new MissingParamError('email')))
+  })
+
+  test('Should return 400 if password is no provided', async () => {
+    const sut = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'any_email@email.com'
+      }
+    }
+    const httResponse = await sut.handle(httpRequest)
+    expect(httResponse).toEqual(badRequest(new MissingParamError('password')))
   })
 })
