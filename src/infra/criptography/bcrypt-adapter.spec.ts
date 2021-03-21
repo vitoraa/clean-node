@@ -6,19 +6,19 @@ const makeSut = (salt: number = 12): BCryptAdapter => {
 }
 
 describe('BCrypt Adapter', () => {
-  test('Should call encrypt with corrects values', async () => {
+  test('Should call hash with corrects values', async () => {
     const bcryptSpy = jest.spyOn(bcrypt, 'hash')
     const salt = 12
     const sut = makeSut(salt)
-    await sut.encrypt('value')
+    await sut.hash('value')
     expect(bcryptSpy).toHaveBeenCalledWith('value', salt)
   })
 
   test('Should return an string on success', async () => {
-    jest.spyOn(bcrypt, 'hash').mockResolvedValue('value_encrypted')
+    jest.spyOn(bcrypt, 'hash').mockResolvedValue('value_hashed')
     const sut = makeSut()
-    const encryptedValue = await sut.encrypt('value')
-    expect(encryptedValue).toBe('value_encrypted')
+    const hashedValue = await sut.hash('value')
+    expect(hashedValue).toBe('value_hashed')
   })
 
   test('Should throw if Bcrypt throws', async () => {
@@ -26,7 +26,7 @@ describe('BCrypt Adapter', () => {
     jest.spyOn(bcrypt, 'hash').mockImplementation(() => {
       throw new Error()
     })
-    const promise = sut.encrypt('value')
+    const promise = sut.hash('value')
     await expect(promise).rejects.toThrow()
   })
 })
