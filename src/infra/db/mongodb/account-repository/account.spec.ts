@@ -6,6 +6,8 @@ const makeSut = (): AccountMongoRepository => {
 }
 
 describe('Account Mongo Repository', () => {
+  let accountCollection
+
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
@@ -15,7 +17,7 @@ describe('Account Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -35,7 +37,7 @@ describe('Account Mongo Repository', () => {
 
   test('Should return an account on loadByEmail success', async () => {
     const sut = makeSut()
-    await sut.add({
+    await accountCollection.insertOne({
       name: 'any_name',
       email: 'any_email@email.com',
       password: 'any_password'
@@ -52,5 +54,21 @@ describe('Account Mongo Repository', () => {
     const sut = makeSut()
     const account = await sut.loadByEmail('any_email@email.com')
     expect(account).toBeFalsy()
+  })
+
+  test('Should update an account on UpdateAccessToken success', async () => {
+    const sut = makeSut()
+    const res = await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password'
+    })
+    const fakeAccount = res.ops[0]
+    expect(fakeAccount).toBeTruthy()
+    expect(fakeAccount.accessToken).toBeFalsy()
+    await sut.updateAccessToken(fakeAccount._id, 'any_access_token')
+    const account = await accountCollection.findOne({ _id: fakeAccount._id })
+    expect(account).toBeTruthy()
+    expect(account.accessToken).toBe('any_access_token')
   })
 })
