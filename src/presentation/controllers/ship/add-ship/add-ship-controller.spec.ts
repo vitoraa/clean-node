@@ -4,6 +4,7 @@ import { ServerError } from '../../../errors'
 import { ok, serverError } from '../../../helpers/http/http-helper'
 import { HttpRequest } from '../../../protocols'
 import { AddShipController } from './add-ship-controller'
+import { Validation } from '../../login/login-controller-protocols'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -26,15 +27,26 @@ const makeAddShip = (): AddShip => {
   return new AddShipStub()
 }
 
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate (input: any): Error {
+      return null
+    }
+  }
+  return new ValidationStub()
+}
+
 interface SutTypes {
   sut: AddShipController
   addShipStub: AddShip
+  validationStub: Validation
 }
 
 const makeSut = (): SutTypes => {
+  const validationStub = makeValidation()
   const addShipStub = makeAddShip()
-  const sut = new AddShipController(addShipStub)
-  return { sut, addShipStub }
+  const sut = new AddShipController(addShipStub, validationStub)
+  return { sut, addShipStub, validationStub }
 }
 
 describe('Add Ship Controller', () => {
@@ -61,5 +73,13 @@ describe('Add Ship Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok(makeFakeResponse()))
+  })
+
+  test('Should call Validation with correct values', async () => {
+    const { sut, validationStub } = makeSut()
+    const validateSpy = jest.spyOn(validationStub, 'validate')
+    const httpRequest = makeFakeRequest()
+    await sut.handle(httpRequest)
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 })
