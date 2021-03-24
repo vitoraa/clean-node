@@ -1,7 +1,7 @@
 import { AddShip, AddShipModel } from '../../../../domain/usecases/add-ship'
 import { ShipModel } from '../../../../domain/models/ship'
-import { ServerError } from '../../../errors'
-import { ok, serverError } from '../../../helpers/http/http-helper'
+import { MissingParamError, ServerError } from '../../../errors'
+import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
 import { HttpRequest } from '../../../protocols'
 import { AddShipController } from './add-ship-controller'
 import { Validation } from '../../login/login-controller-protocols'
@@ -81,5 +81,21 @@ describe('Add Ship Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Should throws 500 if Validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementation(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
+  test('Should return 400 if validation returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
