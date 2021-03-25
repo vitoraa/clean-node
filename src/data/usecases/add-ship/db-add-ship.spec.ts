@@ -71,7 +71,7 @@ describe('DbAddShip UseCase', () => {
     expect(account).toEqual(makeFakeShipModel())
   })
 
-  test('Should call LoadShipByRepository with correct values', async () => {
+  test('Should call LoadShipByImoRepository with correct values', async () => {
     const { sut, loadShipByImoRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadShipByImoRepositoryStub, 'load')
     const fakeShipData = makeFakeShipData()
@@ -79,12 +79,19 @@ describe('DbAddShip UseCase', () => {
     expect(loadSpy).toHaveBeenCalledWith(fakeShipData.imo)
   })
 
-  test('Should throw if LoadShipByRepository throws', async () => {
+  test('Should throw if LoadShipByImoRepository throws', async () => {
     const { sut, loadShipByImoRepositoryStub } = makeSut()
     jest.spyOn(loadShipByImoRepositoryStub, 'load').mockImplementation(() => {
       throw new Error()
     })
     const promise = sut.add(makeFakeShipData())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return null if LoadShipByImoRepository find a ship', async () => {
+    const { sut, loadShipByImoRepositoryStub } = makeSut()
+    jest.spyOn(loadShipByImoRepositoryStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve((makeFakeShipModel()))))
+    const response = await sut.add(makeFakeShipData())
+    expect(response).toBeNull()
   })
 })

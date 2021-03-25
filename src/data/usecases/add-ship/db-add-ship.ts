@@ -10,8 +10,11 @@ export class DbAddShip implements AddShip {
   ) { }
 
   async add (ship: AddShipModel): Promise<ShipModel> {
-    await this.loadShipByImoRepository.load(ship.imo)
-    const newShip = await this.addAShipRepository.add(ship)
-    return newShip
+    const shipWithSameImo = await this.loadShipByImoRepository.load(ship.imo)
+    if (!shipWithSameImo) {
+      const newShip = await this.addAShipRepository.add(ship)
+      return newShip
+    }
+    return null
   }
 }
