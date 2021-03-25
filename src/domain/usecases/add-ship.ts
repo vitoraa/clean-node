@@ -7,4 +7,5 @@ export interface AddShip {
 export interface AddShipModel {
   name: string
   ab: number
+  imo: string
 }
