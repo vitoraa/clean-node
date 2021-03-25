@@ -1,0 +1,44 @@
+import { ShipModel } from '../../../domain/models/ship'
+import { AddShipModel } from '../../../domain/usecases/add-ship'
+import { DbAddShip } from './db-add-ship'
+import { AddAShipRepository } from '../../protocols/db/ship/add-ship-repository'
+
+const makeFakeShipData = (): AddShipModel => ({
+  ab: 10,
+  name: 'any_name'
+})
+
+const makeFakeShipAccount = (): ShipModel => ({
+  ab: 10,
+  name: 'any_name'
+})
+
+const makeAddShipRepository = (): AddAShipRepository => {
+  class AddShipRepositoryStub implements AddAShipRepository {
+    async add (ship: AddShipModel): Promise<ShipModel> {
+      return makeFakeShipAccount()
+    }
+  }
+  return new AddShipRepositoryStub()
+}
+
+interface SutTypes {
+  sut: DbAddShip
+  addShipRepositoryStub: AddAShipRepository
+}
+
+const makeSut = (): SutTypes => {
+  const addShipRepositoryStub = makeAddShipRepository()
+  const sut = new DbAddShip(addShipRepositoryStub)
+  return { sut, addShipRepositoryStub }
+}
+
+describe('DbAddShip', () => {
+  test('Should call AddShipRepository with correct values', async () => {
+    const { sut, addShipRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addShipRepositoryStub, 'add')
+    const fakeShipData = makeFakeShipData()
+    await sut.add(fakeShipData)
+    expect(addSpy).toHaveBeenCalledWith(fakeShipData)
+  })
+})
