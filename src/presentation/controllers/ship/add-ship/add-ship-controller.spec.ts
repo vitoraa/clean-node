@@ -1,7 +1,7 @@
 import { AddShip, AddShipModel } from '../../../../domain/usecases/add-ship'
 import { ShipModel } from '../../../../domain/models/ship'
 import { MissingParamError, ServerError } from '../../../errors'
-import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { HttpRequest } from '../../../protocols'
 import { AddShipController } from './add-ship-controller'
 import { Validation } from '../../login/login-controller-protocols'
@@ -14,8 +14,10 @@ const makeFakeRequest = (): HttpRequest => ({
 })
 
 const makeFakeResponse = (): ShipModel => ({
+  id: 'any_id',
   name: 'any_ship',
-  ab: 20
+  ab: 20,
+  imo: 'any_imo'
 })
 
 const makeAddShip = (): AddShip => {
@@ -71,6 +73,13 @@ describe('Add Ship Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok(makeFakeResponse()))
+  })
+
+  test('Should return 403 if AddShip returns null', async () => {
+    const { sut, addShipStub } = makeSut()
+    jest.spyOn(addShipStub, 'add').mockReturnValueOnce(null)
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new Error()))
   })
 
   test('Should call Validation with correct values', async () => {
