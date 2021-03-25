@@ -11,7 +11,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Ship Mongo Repository', () => {
-  let accountCollection
+  let shipCollection
 
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -22,8 +22,8 @@ describe('Ship Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    accountCollection = await MongoHelper.getCollection('ships')
-    await accountCollection.deleteMany({})
+    shipCollection = await MongoHelper.getCollection('ships')
+    await shipCollection.deleteMany({})
   })
 
   test('Should return a ship on add success', async () => {
@@ -38,5 +38,26 @@ describe('Ship Mongo Repository', () => {
     expect(ship.name).toBe('any_name')
     expect(ship.ab).toBe(10)
     expect(ship.imo).toBe('any_imo')
+  })
+
+  test('Should return a ship on loadByImo success', async () => {
+    const { sut } = makeSut()
+    await shipCollection.insertOne({
+      name: 'any_name',
+      ab: 10,
+      imo: 'any_imo'
+    })
+    const ship = await sut.loadByImo('any_imo')
+    expect(ship).toBeTruthy()
+    expect(ship.id).toBeTruthy()
+    expect(ship.name).toBe('any_name')
+    expect(ship.ab).toBe(10)
+    expect(ship.imo).toBe('any_imo')
+  })
+
+  test('Should return null if loadByImo fails', async () => {
+    const { sut } = makeSut()
+    const ship = await sut.loadByImo('any_imo')
+    expect(ship).toBeFalsy()
   })
 })
