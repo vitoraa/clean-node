@@ -1,7 +1,7 @@
 import { ShipModel } from '../../../domain/models/ship'
 import { AddShipModel } from '../../../domain/usecases/add-ship'
 import { DbAddShip } from './db-add-ship'
-import { AddAShipRepository } from '../../protocols/db/ship/add-ship-repository'
+import { AddShipRepository } from '../../protocols/db/ship/add-ship-repository'
 import { LoadShipByImoRepository } from '../../protocols/db/ship/load-ship-by-imo-repository'
 
 const makeFakeShipData = (): AddShipModel => ({
@@ -11,13 +11,14 @@ const makeFakeShipData = (): AddShipModel => ({
 })
 
 const makeFakeShipModel = (): ShipModel => ({
+  id: 'any_id',
   ab: 10,
   name: 'any_name',
   imo: 'any_imo'
 })
 
-const makeAddShipRepository = (): AddAShipRepository => {
-  class AddShipRepositoryStub implements AddAShipRepository {
+const makeAddShipRepository = (): AddShipRepository => {
+  class AddShipRepositoryStub implements AddShipRepository {
     async add (ship: AddShipModel): Promise<ShipModel> {
       return makeFakeShipModel()
     }
@@ -27,7 +28,7 @@ const makeAddShipRepository = (): AddAShipRepository => {
 
 const makeLoadShipByImoRepository = (): LoadShipByImoRepository => {
   class LoadShipByImoRepositoryStub implements LoadShipByImoRepository {
-    async load (imo: string): Promise<ShipModel> {
+    async loadByImo (imo: string): Promise<ShipModel> {
       return null
     }
   }
@@ -36,7 +37,7 @@ const makeLoadShipByImoRepository = (): LoadShipByImoRepository => {
 
 interface SutTypes {
   sut: DbAddShip
-  addShipRepositoryStub: AddAShipRepository
+  addShipRepositoryStub: AddShipRepository
   loadShipByImoRepositoryStub: LoadShipByImoRepository
 }
 
@@ -73,7 +74,7 @@ describe('DbAddShip UseCase', () => {
 
   test('Should call LoadShipByImoRepository with correct values', async () => {
     const { sut, loadShipByImoRepositoryStub } = makeSut()
-    const loadSpy = jest.spyOn(loadShipByImoRepositoryStub, 'load')
+    const loadSpy = jest.spyOn(loadShipByImoRepositoryStub, 'loadByImo')
     const fakeShipData = makeFakeShipData()
     await sut.add(fakeShipData)
     expect(loadSpy).toHaveBeenCalledWith(fakeShipData.imo)
@@ -81,7 +82,7 @@ describe('DbAddShip UseCase', () => {
 
   test('Should throw if LoadShipByImoRepository throws', async () => {
     const { sut, loadShipByImoRepositoryStub } = makeSut()
-    jest.spyOn(loadShipByImoRepositoryStub, 'load').mockImplementation(() => {
+    jest.spyOn(loadShipByImoRepositoryStub, 'loadByImo').mockImplementation(() => {
       throw new Error()
     })
     const promise = sut.add(makeFakeShipData())
@@ -90,7 +91,7 @@ describe('DbAddShip UseCase', () => {
 
   test('Should return null if LoadShipByImoRepository find a ship', async () => {
     const { sut, loadShipByImoRepositoryStub } = makeSut()
-    jest.spyOn(loadShipByImoRepositoryStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve((makeFakeShipModel()))))
+    jest.spyOn(loadShipByImoRepositoryStub, 'loadByImo').mockReturnValueOnce(new Promise(resolve => resolve((makeFakeShipModel()))))
     const response = await sut.add(makeFakeShipData())
     expect(response).toBeNull()
   })
