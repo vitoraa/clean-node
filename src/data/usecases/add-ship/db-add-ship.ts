@@ -5,7 +5,7 @@ import { AddAShipRepository } from '../../protocols/db/ship/add-ship-repository'
 export class DbAddShip implements AddShip {
   constructor (private readonly addAShipRepository: AddAShipRepository) { }
   async add (ship: AddShipModel): Promise<ShipModel> {
-    await this.addAShipRepository.add(ship)
-    return null
+    const newShip = await this.addAShipRepository.add(ship)
+    return newShip
   }
 }

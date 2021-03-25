@@ -8,7 +8,7 @@ const makeFakeShipData = (): AddShipModel => ({
   name: 'any_name'
 })
 
-const makeFakeShipAccount = (): ShipModel => ({
+const makeFakeShipModel = (): ShipModel => ({
   ab: 10,
   name: 'any_name'
 })
@@ -16,7 +16,7 @@ const makeFakeShipAccount = (): ShipModel => ({
 const makeAddShipRepository = (): AddAShipRepository => {
   class AddShipRepositoryStub implements AddAShipRepository {
     async add (ship: AddShipModel): Promise<ShipModel> {
-      return makeFakeShipAccount()
+      return makeFakeShipModel()
     }
   }
   return new AddShipRepositoryStub()
@@ -49,5 +49,11 @@ describe('DbAddShip', () => {
     })
     const promise = sut.add(makeFakeShipData())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return a Ship on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.add(makeFakeShipData())
+    expect(account).toEqual(makeFakeShipModel())
   })
 })
