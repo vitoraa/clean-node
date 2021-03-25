@@ -30,5 +30,15 @@ describe('Ship Routes', () => {
         })
         .expect(200)
     })
+
+    test('Should return 400 on add ship if required field is missing', async () => {
+      await request(app)
+        .post('/api/ships')
+        .send({
+          name: 'any name',
+          imo: 'any_imo'
+        })
+        .expect(400)
+    })
   })
 })
