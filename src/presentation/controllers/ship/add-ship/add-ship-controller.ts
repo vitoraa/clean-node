@@ -15,8 +15,8 @@ export class AddShipController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const { name, ab } = httpRequest.body
-      const ship = await this.addShip.add({ name, ab })
+      // const { name, ab } = httpRequest.body
+      const ship = await this.addShip.add(httpRequest.body)
       return ok(ship)
     } catch (error) {
       return serverError(error)

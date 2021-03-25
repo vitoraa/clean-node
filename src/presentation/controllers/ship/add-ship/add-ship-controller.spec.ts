@@ -53,11 +53,9 @@ describe('Add Ship Controller', () => {
   test('Should call AddShip with corrects params', async () => {
     const { sut, addShipStub } = makeSut()
     const addSpy = jest.spyOn(addShipStub, 'add')
-    await sut.handle(makeFakeRequest())
-    expect(addSpy).toHaveBeenCalledWith({
-      name: 'any_ship',
-      ab: 20
-    })
+    const httpRequest = makeFakeRequest()
+    await sut.handle(httpRequest)
+    expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
   test('Should thows 500 if AddShip throws', async () => {
