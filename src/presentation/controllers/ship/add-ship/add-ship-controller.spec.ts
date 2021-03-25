@@ -1,6 +1,6 @@
 import { AddShip, AddShipModel } from '../../../../domain/usecases/add-ship'
 import { ShipModel } from '../../../../domain/models/ship'
-import { MissingParamError, ServerError } from '../../../errors'
+import { FieldInUseError, MissingParamError, ServerError } from '../../../errors'
 import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { HttpRequest } from '../../../protocols'
 import { AddShipController } from './add-ship-controller'
@@ -79,7 +79,7 @@ describe('Add Ship Controller', () => {
     const { sut, addShipStub } = makeSut()
     jest.spyOn(addShipStub, 'add').mockReturnValueOnce(null)
     const httpResponse = await sut.handle(makeFakeRequest())
-    expect(httpResponse).toEqual(forbidden(new Error()))
+    expect(httpResponse).toEqual(forbidden(new FieldInUseError('Imo')))
   })
 
   test('Should call Validation with correct values', async () => {

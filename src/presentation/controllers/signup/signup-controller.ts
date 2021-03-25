@@ -2,7 +2,7 @@ import { HttpRequest, HttpResponse, Controller, AddAccount } from './signup-cont
 import { badRequest, forbidden, ok, serverError } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
 import { Authentication } from '../login/login-controller-protocols'
-import { EmailInUseError } from '../../errors'
+import { FieldInUseError } from '../../errors'
 
 export class SignUpController implements Controller {
   constructor (
@@ -23,7 +23,7 @@ export class SignUpController implements Controller {
       const account = await this.addAccount.add({ email, password, name })
 
       if (!account) {
-        return forbidden(new EmailInUseError())
+        return forbidden(new FieldInUseError('Email'))
       }
 
       const accessToken = await this.authentication.auth({ email, password })
