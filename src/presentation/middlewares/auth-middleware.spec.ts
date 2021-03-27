@@ -3,12 +3,19 @@ import { AccessDeniedError } from '../errors'
 import { AuthMiddleware } from './auth-middleware'
 import { LoadAccountByTokenRepository } from '../../data/protocols/db/account/load-account-by-token-repository'
 import { AccountModel } from '../../domain/models/account'
+import { HttpRequest } from '../protocols'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
   email: 'valid_email@email.com.br',
   name: 'valid_name',
   password: 'valid_password'
+})
+
+const makeFakeRequest = (): HttpRequest => ({
+  headers: {
+    'x-access-token': 'any_token'
+  }
 })
 
 const makeLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
@@ -41,11 +48,14 @@ describe('Auth Middleware', () => {
   test('Should call LoadAccountByToken with correct AccessToken', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
     const spyLoad = jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken')
-    await sut.handle({
-      headers: {
-        'x-access-token': 'any_token'
-      }
-    })
+    await sut.handle(makeFakeRequest())
     expect(spyLoad).toHaveBeenCalledWith('any_token')
+  })
+
+  test('Should call return 403 if LoadAccountByToken returns null', async () => {
+    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(null)
+    const response = await sut.handle(makeFakeRequest())
+    expect(response).toEqual(forbidden(new AccessDeniedError()))
   })
 })
