@@ -3,6 +3,8 @@ import { LoadShips, LoadShipsModel } from '../../../../domain/usecases/load-ship
 import { HttpRequest } from '../../../protocols'
 import { Validation } from '../../signup/signup-controller-protocols'
 import { LoadShipsController } from './load-ships-controller'
+import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
+import { MissingParamError, ServerError } from '../../../errors'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -63,11 +65,49 @@ describe('Add Ship Controller', () => {
     expect(loadSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
+  test('Should return 404 if LoadShips returns null', async () => {
+    const { sut, loadShipsStub } = makeSut()
+    jest.spyOn(loadShipsStub, 'load').mockReturnValueOnce(null)
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(notFound({}))
+  })
+
+  test('Should return 200 if LoadShips succeeds', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(ok(makeFakeResponse()))
+  })
+
+  test('Should thows 500 if LoadShips throws', async () => {
+    const { sut, loadShipsStub } = makeSut()
+    jest.spyOn(loadShipsStub, 'load').mockImplementation(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
   test('Should call Validation with corrects params', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Should throws 500 if Validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementation(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
+  test('Should return 400 if validation returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })

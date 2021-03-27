@@ -1,4 +1,5 @@
 import { LoadShips } from '../../../../domain/usecases/load-ships'
+import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '../../../protocols'
 import { Validation } from '../../signup/signup-controller-protocols'
 
@@ -9,8 +10,18 @@ export class LoadShipsController implements Controller {
   ) { }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    this.validation.validate(httpRequest.body)
-    await this.loadShips.load(httpRequest.body)
-    return null
+    try {
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
+      }
+      const ships = await this.loadShips.load(httpRequest.body)
+      if (ships) {
+        return ok(ships)
+      }
+      return notFound({})
+    } catch (error) {
+      return serverError(error)
+    }
   }
 }

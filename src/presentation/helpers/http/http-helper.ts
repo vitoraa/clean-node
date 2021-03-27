@@ -36,3 +36,10 @@ export const unauthorized = (): HttpResponse => {
     body: new UnauthorizedError()
   }
 }
+
+export const notFound = (body: any): HttpResponse => {
+  return {
+    statusCode: 404,
+    body
+  }
+}
