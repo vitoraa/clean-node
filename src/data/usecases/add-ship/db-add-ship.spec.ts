@@ -68,8 +68,8 @@ describe('DbAddShip UseCase', () => {
 
   test('Should return a Ship on success', async () => {
     const { sut } = makeSut()
-    const account = await sut.add(makeFakeShipData())
-    expect(account).toEqual(makeFakeShipModel())
+    const ship = await sut.add(makeFakeShipData())
+    expect(ship).toEqual(makeFakeShipModel())
   })
 
   test('Should call LoadShipByImoRepository with correct values', async () => {

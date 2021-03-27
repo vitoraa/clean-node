@@ -5,7 +5,7 @@ export interface LoadShips {
 }
 
 export interface LoadShipsModel {
-  email: string
   name: string
-  password: string
+  imo: string
+  ab: number
 }

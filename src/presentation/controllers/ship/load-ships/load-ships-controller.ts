@@ -16,7 +16,7 @@ export class LoadShipsController implements Controller {
         return badRequest(error)
       }
       const ships = await this.loadShips.load(httpRequest.body)
-      if (ships) {
+      if (ships.length) {
         return ok(ships)
       }
       return notFound({})

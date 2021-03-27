@@ -1,5 +1,5 @@
 import { ShipModel } from '../../../../domain/models/ship'
-import { LoadShips, LoadShipsModel } from '../../../../domain/usecases/load-ships'
+import { LoadShips, LoadShipsModel } from '../../../../domain/usecases/ship/load-ships'
 import { HttpRequest } from '../../../protocols'
 import { Validation } from '../../signup/signup-controller-protocols'
 import { LoadShipsController } from './load-ships-controller'
@@ -27,7 +27,7 @@ const makeFakeResponse = (): ShipModel[] => ([{
 
 const makeAddShip = (): LoadShips => {
   class LoadShipsStub implements LoadShips {
-    async load (ship: LoadShipsModel): Promise<ShipModel[]> {
+    async load (params: LoadShipsModel): Promise<ShipModel[]> {
       return makeFakeResponse()
     }
   }
@@ -65,9 +65,9 @@ describe('Add Ship Controller', () => {
     expect(loadSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  test('Should return 404 if LoadShips returns null', async () => {
+  test('Should return 404 if LoadShips returns empty', async () => {
     const { sut, loadShipsStub } = makeSut()
-    jest.spyOn(loadShipsStub, 'load').mockReturnValueOnce(null)
+    jest.spyOn(loadShipsStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve([])))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(notFound({}))
   })
