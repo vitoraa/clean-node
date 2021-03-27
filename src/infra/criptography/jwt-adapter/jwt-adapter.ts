@@ -4,9 +4,10 @@ import { Decrypter } from '../../../data/protocols/criptography/decrypter'
 
 export class JwtAdapter implements Encrypter, Decrypter {
   constructor (private readonly secret: string) { }
-  async decrypt (value: string): Promise<string> {
-    jwt.verify(value, this.secret)
-    return null
+
+  async decrypt (token: string): Promise<string> {
+    const value: any = jwt.verify(token, this.secret)
+    return value
   }
 
   async encrypt (value: string): Promise<string> {
