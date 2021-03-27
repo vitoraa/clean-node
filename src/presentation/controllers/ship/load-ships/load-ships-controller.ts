@@ -1,4 +1,4 @@
-import { LoadShips } from '../../../../domain/usecases/load-ships'
+import { LoadShips } from '../../../../domain/usecases/ship/load-ships'
 import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '../../../protocols'
 import { Validation } from '../../signup/signup-controller-protocols'

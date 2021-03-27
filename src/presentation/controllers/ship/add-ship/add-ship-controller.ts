@@ -1,4 +1,4 @@
-import { AddShip } from '../../../../domain/usecases/add-ship'
+import { AddShip } from '../../../../domain/usecases/ship/add-ship'
 import { FieldInUseError } from '../../../errors/field-in-use-error'
 import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '../../../protocols'

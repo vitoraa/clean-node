@@ -1,5 +1,5 @@
 import { ShipModel } from '../../../domain/models/ship'
-import { AddShip, AddShipModel } from '../../../domain/usecases/add-ship'
+import { AddShip, AddShipModel } from '../../../domain/usecases/ship/add-ship'
 import { AddShipRepository } from '../../protocols/db/ship/add-ship-repository'
 import { LoadShipByImoRepository } from '../../protocols/db/ship/load-ship-by-imo-repository'
 
