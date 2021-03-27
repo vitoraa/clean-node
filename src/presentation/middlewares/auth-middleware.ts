@@ -5,13 +5,16 @@ import { HttpRequest, HttpResponse } from '../protocols'
 import { Middleware } from '../protocols/middleware'
 
 export class AuthMiddleware implements Middleware {
-  constructor (private readonly loadAccountByTokenRepository: LoadAccountByTokenRepository) { }
+  constructor (
+    private readonly loadAccountByTokenRepository: LoadAccountByTokenRepository,
+    private readonly role?: string
+  ) { }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const accessToken = httpRequest.headers?.['x-access-token']
       if (accessToken) {
-        const account = await this.loadAccountByTokenRepository.loadByToken(accessToken)
+        const account = await this.loadAccountByTokenRepository.loadByToken(accessToken, this.role)
         if (account) {
           return ok({ accountId: account.id })
         }
