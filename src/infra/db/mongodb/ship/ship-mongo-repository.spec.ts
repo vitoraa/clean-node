@@ -67,4 +67,11 @@ describe('Ship Mongo Repository', () => {
     expect(ships).toBeTruthy()
     expect(ships.length).toBe(2)
   })
+
+  test('Should load empty list', async () => {
+    const { sut } = makeSut()
+    const ships = await sut.load({})
+    expect(ships).toBeTruthy()
+    expect(ships).toEqual([])
+  })
 })
