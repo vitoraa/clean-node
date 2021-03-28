@@ -25,7 +25,7 @@ const makeLoadShipsRepository = (): LoadShipsRepository => {
   return new LoadShipsRepositoryStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbLoadShips
   loadShipsRepositoryStub: LoadShipsRepository
 }

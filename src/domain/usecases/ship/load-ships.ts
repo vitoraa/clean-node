@@ -4,7 +4,7 @@ export interface LoadShips {
   load: (params: LoadShipsModel) => Promise<ShipModel[]>
 }
 
-export interface LoadShipsModel {
+export type LoadShipsModel = {
   name?: string
   imo?: string
   ab?: number

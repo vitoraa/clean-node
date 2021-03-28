@@ -7,7 +7,7 @@ const makeFakeShip = (): any => ({
   imo: 'any_imo'
 })
 
-interface SutTypes {
+type SutTypes = {
   sut: ShipMongoRepository
 }
 
