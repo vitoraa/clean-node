@@ -4,7 +4,7 @@ export interface AddShip {
   add: (ship: AddShipModel) => Promise<ShipModel>
 }
 
-export interface AddShipModel {
+export type AddShipModel = {
   name: string
   ab: number
   imo: string

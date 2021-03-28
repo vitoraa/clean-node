@@ -1,4 +1,4 @@
-export interface ShipModel {
+export type ShipModel = {
   id: string
   name: string
   ab: number

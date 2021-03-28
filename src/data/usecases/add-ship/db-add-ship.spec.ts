@@ -35,7 +35,7 @@ const makeLoadShipByImoRepository = (): LoadShipByImoRepository => {
   return new LoadShipByImoRepositoryStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAddShip
   addShipRepositoryStub: AddShipRepository
   loadShipByImoRepositoryStub: LoadShipByImoRepository
