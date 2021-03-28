@@ -1,7 +1,7 @@
-import { AddShip } from '../../../../domain/usecases/ship/add-ship'
-import { FieldInUseError } from '../../../errors/field-in-use-error'
-import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '../../../protocols'
+import { AddShip } from '@/domain/usecases/ship/add-ship'
+import { FieldInUseError } from '@/presentation/errors/field-in-use-error'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 import { Validation } from '../../login/login-controller-protocols'
 
 export class AddShipController implements Controller {

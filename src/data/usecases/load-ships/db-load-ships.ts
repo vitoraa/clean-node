@@ -1,6 +1,6 @@
-import { ShipModel } from '../../../domain/models/ship'
-import { LoadShips, LoadShipsModel } from '../../../domain/usecases/ship/load-ships'
-import { LoadShipsRepository } from '../../protocols/db/ship/load-ships-repository'
+import { ShipModel } from '@/domain/models/ship'
+import { LoadShips, LoadShipsModel } from '@/domain/usecases/ship/load-ships'
+import { LoadShipsRepository } from '@/data/protocols/db/ship/load-ships-repository'
 
 export class DbLoadShips implements LoadShips {
   constructor (

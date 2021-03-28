@@ -1,6 +1,6 @@
-import { DbLoadShips } from '../../../../data/usecases/load-ships/db-load-ships'
-import { LoadShips } from '../../../../domain/usecases/ship/load-ships'
-import { ShipMongoRepository } from '../../../../infra/db/mongodb/ship/ship-mongo-repository'
+import { DbLoadShips } from '@/data/usecases/load-ships/db-load-ships'
+import { LoadShips } from '@/domain/usecases/ship/load-ships'
+import { ShipMongoRepository } from '@/infra/db/mongodb/ship/ship-mongo-repository'
 
 export const makeDbLoadShips = (): LoadShips => {
   const shipMongoRepository = new ShipMongoRepository()

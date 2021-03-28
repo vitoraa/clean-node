@@ -1,5 +1,5 @@
-import { Validation } from '../../../../../presentation/protocols/validation'
-import { ValidationComposite } from '../../../../../validation/validators'
+import { Validation } from '@/presentation/protocols/validation'
+import { ValidationComposite } from '@/validation/validators'
 import { makeLoadShipsValidation } from './load-ships-validation-factory'
 
 jest.mock('../../../../../validation/validators/validation-composite')
