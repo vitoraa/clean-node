@@ -21,7 +21,6 @@ export class AuthMiddleware implements Middleware {
       }
       return forbidden(new AccessDeniedError())
     } catch (error) {
-      console.log(error)
       return serverError(error)
     }
   }
