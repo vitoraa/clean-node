@@ -1,10 +1,10 @@
-import { ShipModel } from '../../../../domain/models/ship'
-import { FieldInUseError, MissingParamError, ServerError } from '../../../errors'
-import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
-import { HttpRequest } from '../../../protocols'
+import { ShipModel } from '@/domain/models/ship'
+import { FieldInUseError, MissingParamError, ServerError } from '@/presentation/errors'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { HttpRequest } from '@/presentation/protocols'
 import { AddShipController } from './add-ship-controller'
 import { Validation } from '../../login/login-controller-protocols'
-import { AddShip, AddShipModel } from '../../../../domain/usecases/ship/add-ship'
+import { AddShip, AddShipModel } from '@/domain/usecases/ship/add-ship'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

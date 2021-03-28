@@ -1,7 +1,7 @@
-import { ShipModel } from '../../../domain/models/ship'
-import { AddShip, AddShipModel } from '../../../domain/usecases/ship/add-ship'
-import { AddShipRepository } from '../../protocols/db/ship/add-ship-repository'
-import { LoadShipByImoRepository } from '../../protocols/db/ship/load-ship-by-imo-repository'
+import { ShipModel } from '@/domain/models/ship'
+import { AddShip, AddShipModel } from '@/domain/usecases/ship/add-ship'
+import { AddShipRepository } from '@/data/protocols/db/ship/add-ship-repository'
+import { LoadShipByImoRepository } from '@/data/protocols/db/ship/load-ship-by-imo-repository'
 
 export class DbAddShip implements AddShip {
   constructor (

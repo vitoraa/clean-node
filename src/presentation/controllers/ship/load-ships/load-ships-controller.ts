@@ -1,6 +1,6 @@
-import { LoadShips } from '../../../../domain/usecases/ship/load-ships'
-import { badRequest, notFound, ok, serverError } from '../../../helpers/http/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '../../../protocols'
+import { LoadShips } from '@/domain/usecases/ship/load-ships'
+import { badRequest, notFound, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 import { Validation } from '../../signup/signup-controller-protocols'
 
 export class LoadShipsController implements Controller {

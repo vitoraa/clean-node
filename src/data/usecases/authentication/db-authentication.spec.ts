@@ -1,10 +1,10 @@
-import { AccountModel } from '../../../domain/models/account'
-import { HashComparer } from '../../protocols/criptography/hash-comparer'
-import { LoadAccountByEmailRepository } from '../../protocols/db/account/load-account-by-email-repository'
-import { Encrypter } from '../../protocols/criptography/encrypter'
+import { AccountModel } from '@/domain/models/account'
+import { HashComparer } from '@/data/protocols/criptography/hash-comparer'
+import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository'
+import { Encrypter } from '@/data/protocols/criptography/encrypter'
 import { DbAuthentication } from './db-authentication'
-import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository'
-import { AuthenticationModel } from '../../../domain/usecases/account/authentication'
+import { UpdateAccessTokenRepository } from '@/data/protocols/db/account/update-access-token-repository'
+import { AuthenticationModel } from '@/domain/usecases/account/authentication'
 
 const makeFakeAuthentication = (): AuthenticationModel => ({
   email: 'any_email@email.com',

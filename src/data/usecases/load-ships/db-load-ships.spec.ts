@@ -1,6 +1,6 @@
-import { ShipModel } from '../../../domain/models/ship'
-import { LoadShipsModel } from '../../../domain/usecases/ship/load-ships'
-import { LoadShipsRepository } from '../../protocols/db/ship/load-ships-repository'
+import { ShipModel } from '@/domain/models/ship'
+import { LoadShipsModel } from '@/domain/usecases/ship/load-ships'
+import { LoadShipsRepository } from '@/data/protocols/db/ship/load-ships-repository'
 import { DbLoadShips } from './db-load-ships'
 
 const makeFakeLoadShipsData = (): LoadShipsModel => ({

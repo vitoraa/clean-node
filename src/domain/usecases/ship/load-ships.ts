@@ -1,4 +1,4 @@
-import { ShipModel } from '../../models/ship'
+import { ShipModel } from '@/domain/models/ship'
 
 export interface LoadShips {
   load: (params: LoadShipsModel) => Promise<ShipModel[]>
