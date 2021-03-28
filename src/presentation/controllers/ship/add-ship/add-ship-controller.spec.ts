@@ -1,10 +1,10 @@
-import { AddShip, AddShipModel } from '../../../../domain/usecases/add-ship'
 import { ShipModel } from '../../../../domain/models/ship'
 import { FieldInUseError, MissingParamError, ServerError } from '../../../errors'
 import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { HttpRequest } from '../../../protocols'
 import { AddShipController } from './add-ship-controller'
 import { Validation } from '../../login/login-controller-protocols'
+import { AddShip, AddShipModel } from '../../../../domain/usecases/ship/add-ship'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
