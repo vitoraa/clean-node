@@ -1,6 +1,12 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ShipMongoRepository } from './ship-mongo-repository'
 
+const makeFakeShip = (): any => ({
+  name: 'any_name',
+  ab: 10,
+  imo: 'any_imo'
+})
+
 interface SutTypes {
   sut: ShipMongoRepository
 }
@@ -28,11 +34,7 @@ describe('Ship Mongo Repository', () => {
 
   test('Should return a ship on add success', async () => {
     const { sut } = makeSut()
-    const ship = await sut.add({
-      name: 'any_name',
-      ab: 10,
-      imo: 'any_imo'
-    })
+    const ship = await sut.add(makeFakeShip())
     expect(ship).toBeTruthy()
     expect(ship.id).toBeTruthy()
     expect(ship.name).toBe('any_name')
@@ -42,11 +44,7 @@ describe('Ship Mongo Repository', () => {
 
   test('Should return a ship on loadByImo success', async () => {
     const { sut } = makeSut()
-    await shipCollection.insertOne({
-      name: 'any_name',
-      ab: 10,
-      imo: 'any_imo'
-    })
+    await shipCollection.insertOne(makeFakeShip())
     const ship = await sut.loadByImo('any_imo')
     expect(ship).toBeTruthy()
     expect(ship.id).toBeTruthy()
@@ -59,5 +57,14 @@ describe('Ship Mongo Repository', () => {
     const { sut } = makeSut()
     const ship = await sut.loadByImo('any_imo')
     expect(ship).toBeFalsy()
+  })
+
+  test('Should return all ships on load if object empty', async () => {
+    const { sut } = makeSut()
+    await shipCollection.insertOne(makeFakeShip())
+    await shipCollection.insertOne(makeFakeShip())
+    const ships = await sut.load({})
+    expect(ships).toBeTruthy()
+    expect(ships.length).toBe(2)
   })
 })

@@ -5,7 +5,7 @@ export interface LoadShips {
 }
 
 export interface LoadShipsModel {
-  name: string
-  imo: string
-  ab: number
+  name?: string
+  imo?: string
+  ab?: number
 }
