@@ -27,6 +27,36 @@ const createFakeAdminAccount = async (): Promise<string> => {
   return accessToken
 }
 
+const createFakeAccount = async (): Promise<string> => {
+  const res = await accountCollection.insertOne({
+    name: 'Vitor',
+    email: 'vitor@gmail.com',
+    password: 'password'
+  })
+  const id = res.ops[0]._id
+  const accessToken = sign({ id }, env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
+
+const createFakeShips = async (): Promise<void> => {
+  await shipCollection.insertMany([{
+    name: 'any_name',
+    imo: 'any_imo',
+    ab: 30
+  }, {
+    name: 'other_name',
+    imo: 'other_imo',
+    ab: 50
+  }])
+}
+
 describe('Ship Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -78,6 +108,60 @@ describe('Ship Routes', () => {
           imo: 'any_imo'
         })
         .expect(400)
+    })
+  })
+
+  describe('GET /ship', () => {
+    test('Should return 403 on load ships without accessToken', async () => {
+      await request(app)
+        .get('/api/ships')
+        .send({
+          name: 'any name',
+          imo: 'any_imo',
+          ab: 123
+        })
+        .expect(403)
+    })
+
+    test('Should return 200 on load ships with admin accessToken', async () => {
+      await createFakeShips()
+      const accessToken = await createFakeAdminAccount()
+      await request(app)
+        .get('/api/ships')
+        .set('x-access-token', accessToken)
+        .send({
+          name: 'any name',
+          imo: 'any_imo',
+          ab: 123
+        })
+        .expect(200)
+    })
+
+    test('Should return 200 on load ships with authenticated accessToken', async () => {
+      await createFakeShips()
+      const accessToken = await createFakeAccount()
+      await request(app)
+        .get('/api/ships')
+        .set('x-access-token', accessToken)
+        .send({
+          name: 'any name',
+          imo: 'any_imo',
+          ab: 123
+        })
+        .expect(200)
+    })
+
+    test('Should return 404 on load ships if there is no ships', async () => {
+      const accessToken = await createFakeAccount()
+      await request(app)
+        .get('/api/ships')
+        .set('x-access-token', accessToken)
+        .send({
+          name: 'any name',
+          imo: 'any_imo',
+          ab: 123
+        })
+        .expect(404)
     })
   })
 })
