@@ -2,9 +2,9 @@ import { LoadShipsController } from '../../../../../presentation/controllers/shi
 import { Controller } from '../../../../../presentation/protocols'
 import { makeLogControllerDecorator } from '../../../decorators/log-controller-decorator-factory'
 import { makeDbLoadShips } from '../../../usecases/load-ships/db-load-ships'
-import { makeAddShipValidation } from '../add-ship/add-ship-validation-factory'
+import { makeLoadShipsValidation } from './load-ships-validation-factory'
 
 export const makeLoadShipsController = (): Controller => {
-  const loadShipsController = new LoadShipsController(makeDbLoadShips(), makeAddShipValidation())
+  const loadShipsController = new LoadShipsController(makeDbLoadShips(), makeLoadShipsValidation())
   return makeLogControllerDecorator(loadShipsController)
 }
