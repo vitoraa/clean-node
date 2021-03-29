@@ -103,6 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-./globalConfig.json
+globalConfig.json
 data
 !src/data
