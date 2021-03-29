@@ -7,8 +7,8 @@ export class DbSaveActivity implements SaveActivity {
     private readonly saveActivityRepository: SaveActivityRepository
   ) { }
 
-  async save (data: SaveActivityModel): Promise<ActivityModel> {
-    await this.saveActivityRepository.save(data)
-    return null
+  async save (activityData: SaveActivityModel): Promise<ActivityModel> {
+    const activity = await this.saveActivityRepository.save(activityData)
+    return activity
   }
 }

@@ -11,12 +11,9 @@ const makeFakeSaveActivityModel = (): SaveActivityModel => ({
   shipId: 'ship_id'
 })
 
-const makeFakeActivityModel = (): ActivityModel => ({
-  id: 'any_id',
-  date: new Date(),
-  accountId: 'account_id',
-  shipId: 'ship_id'
-})
+const makeFakeActivityModel = (): ActivityModel => Object.assign(
+  {}, makeFakeSaveActivityModel(), { id: 'any_id' }
+)
 
 const makeSaveActivityRepository = (): SaveActivityRepository => {
   class LoadShipByIdRepositoryStub implements SaveActivityRepository {
@@ -52,5 +49,20 @@ describe('DbSaveActivity UseCase', () => {
     const saveSpy = jest.spyOn(saveActivityRepositoryStub, 'save')
     await sut.save(makeFakeSaveActivityModel())
     expect(saveSpy).toHaveBeenCalledWith(makeFakeSaveActivityModel())
+  })
+
+  test('Should return an activity on success', async () => {
+    const { sut } = makeSut()
+    const activity = await sut.save(makeFakeSaveActivityModel())
+    expect(activity).toEqual(makeFakeActivityModel())
+  })
+
+  test('Should throw if SaveActivityRepository throws', async () => {
+    const { sut, saveActivityRepositoryStub } = makeSut()
+    jest.spyOn(saveActivityRepositoryStub, 'save').mockImplementation(() => {
+      throw new Error()
+    })
+    const response = sut.save(makeFakeSaveActivityModel())
+    await expect(response).rejects.toThrow()
   })
 })
