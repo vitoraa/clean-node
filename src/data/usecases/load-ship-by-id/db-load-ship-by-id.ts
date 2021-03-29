@@ -8,7 +8,7 @@ export class DbLoadShipById implements LoadShipById {
   ) { }
 
   async loadById (id: string): Promise<ShipModel> {
-    await this.loadShipByIdRepository.loadById(id)
-    return null
+    const ship = await this.loadShipByIdRepository.loadById(id)
+    return ship
   }
 }

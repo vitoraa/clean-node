@@ -29,11 +29,26 @@ const makeSut = (): SutTypes => {
   return { sut, loadShipByIdRepositoryStub }
 }
 
-describe('DbLoadShips UseCase', () => {
-  test('Should call LoadShipsByIdRepository with correct values', async () => {
+describe('DbLoadShipById UseCase', () => {
+  test('Should call LoadShipByIdRepository with correct values', async () => {
     const { sut, loadShipByIdRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadShipByIdRepositoryStub, 'loadById')
     await sut.loadById('any_id')
     expect(loadSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  test('Should throw if LoadShipByIdRepository throws', async () => {
+    const { sut, loadShipByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadShipByIdRepositoryStub, 'loadById').mockImplementation(() => {
+      throw new Error()
+    })
+    const promise = sut.loadById('any_id')
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return Ship on success', async () => {
+    const { sut } = makeSut()
+    const ship = await sut.loadById('any_id')
+    expect(ship).toEqual(makeFakeShipModel())
   })
 })
