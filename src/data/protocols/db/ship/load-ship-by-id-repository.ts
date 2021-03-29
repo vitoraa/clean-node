@@ -1,5 +1,5 @@
 import { ShipModel } from '@/domain/models/ship'
 
-export interface LoadShipById {
+export interface LoadShipByIdRepository {
   loadById: (id: string) => Promise<ShipModel>
 }
