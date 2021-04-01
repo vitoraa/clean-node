@@ -1,3 +1,4 @@
+import { serverError } from '@/presentation/helpers/http/http-helper'
 import { HttpRequest } from '@/presentation/protocols'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddActivityController } from './add-activity-controller'
@@ -41,5 +42,14 @@ describe('Save Activity Controller', () => {
       accountId: 'any_account',
       shipId: 'any_ship'
     })
+  })
+
+  test('Should throws 500 if Validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementation(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
