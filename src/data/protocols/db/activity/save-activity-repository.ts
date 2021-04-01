@@ -1,6 +1,6 @@
 import { ActivityModel } from '@/domain/models/activity'
-import { SaveActivityModel } from '@/domain/usecases/activity/save-activity'
+import { CreateActivityModel } from '@/domain/usecases/activity/insert-activity'
 
-export interface SaveActivityRepository {
-  save: (activity: SaveActivityModel) => Promise<ActivityModel>
+export interface InsertActivityRepository {
+  insert: (activity: CreateActivityModel) => Promise<ActivityModel>
 }

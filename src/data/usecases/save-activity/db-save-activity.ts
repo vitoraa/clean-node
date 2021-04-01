@@ -1,14 +1,13 @@
-import { SaveActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
 import { ActivityModel } from '@/domain/models/activity'
-import { SaveActivity, SaveActivityModel } from '@/domain/usecases/activity/save-activity'
+import { CreateActivityModel, InsertActivity } from '@/domain/usecases/activity/insert-activity'
 
-export class DbSaveActivity implements SaveActivity {
+export class DbSaveActivity implements InsertActivity {
   constructor (
-    private readonly saveActivityRepository: SaveActivityRepository
+    private readonly saveActivityRepository: InsertActivity
   ) { }
 
-  async save (activityData: SaveActivityModel): Promise<ActivityModel> {
-    const activity = await this.saveActivityRepository.save(activityData)
+  async insert (activityData: CreateActivityModel): Promise<ActivityModel> {
+    const activity = await this.saveActivityRepository.insert(activityData)
     return activity
   }
 }

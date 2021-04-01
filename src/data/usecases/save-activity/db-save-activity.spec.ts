@@ -1,38 +1,38 @@
 import { DbSaveActivity } from './db-save-activity'
-import { SaveActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
+import { InsertActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
 import { ActivityModel } from '@/domain/models/activity'
-import { SaveActivityModel } from '@/domain/usecases/activity/save-activity'
+import { CreateActivityModel } from '@/domain/usecases/activity/insert-activity'
 
 import MockDate from 'mockdate'
 
-const makeFakeSaveActivityModel = (): SaveActivityModel => ({
+const makeFakeCreateActivityModel = (): CreateActivityModel => ({
   date: new Date(),
   accountId: 'account_id',
   shipId: 'ship_id'
 })
 
 const makeFakeActivityModel = (): ActivityModel => Object.assign(
-  {}, makeFakeSaveActivityModel(), { id: 'any_id' }
+  {}, makeFakeCreateActivityModel(), { id: 'any_id' }
 )
 
-const makeSaveActivityRepository = (): SaveActivityRepository => {
-  class LoadShipByIdRepositoryStub implements SaveActivityRepository {
-    async save (activity: ActivityModel): Promise<ActivityModel> {
+const makeInsertActivityRepository = (): InsertActivityRepository => {
+  class InsertActivityRepositoryStub implements InsertActivityRepository {
+    async insert (activity: ActivityModel): Promise<ActivityModel> {
       return makeFakeActivityModel()
     }
   }
-  return new LoadShipByIdRepositoryStub()
+  return new InsertActivityRepositoryStub()
 }
 
 type SutTypes = {
   sut: DbSaveActivity
-  saveActivityRepositoryStub: SaveActivityRepository
+  InsertActivityRepositoryStub: InsertActivityRepository
 }
 
 const makeSut = (): SutTypes => {
-  const saveActivityRepositoryStub = makeSaveActivityRepository()
-  const sut = new DbSaveActivity(saveActivityRepositoryStub)
-  return { sut, saveActivityRepositoryStub }
+  const InsertActivityRepositoryStub = makeInsertActivityRepository()
+  const sut = new DbSaveActivity(InsertActivityRepositoryStub)
+  return { sut, InsertActivityRepositoryStub }
 }
 
 describe('DbSaveActivity UseCase', () => {
@@ -44,25 +44,25 @@ describe('DbSaveActivity UseCase', () => {
     MockDate.reset()
   })
 
-  test('Should call SaveActivityRepository with correct values', async () => {
-    const { sut, saveActivityRepositoryStub } = makeSut()
-    const saveSpy = jest.spyOn(saveActivityRepositoryStub, 'save')
-    await sut.save(makeFakeSaveActivityModel())
-    expect(saveSpy).toHaveBeenCalledWith(makeFakeSaveActivityModel())
+  test('Should call InsertActivityRepository with correct values', async () => {
+    const { sut, InsertActivityRepositoryStub } = makeSut()
+    const saveSpy = jest.spyOn(InsertActivityRepositoryStub, 'insert')
+    await sut.insert(makeFakeCreateActivityModel())
+    expect(saveSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel())
   })
 
   test('Should return an activity on success', async () => {
     const { sut } = makeSut()
-    const activity = await sut.save(makeFakeSaveActivityModel())
+    const activity = await sut.insert(makeFakeCreateActivityModel())
     expect(activity).toEqual(makeFakeActivityModel())
   })
 
-  test('Should throw if SaveActivityRepository throws', async () => {
-    const { sut, saveActivityRepositoryStub } = makeSut()
-    jest.spyOn(saveActivityRepositoryStub, 'save').mockImplementation(() => {
+  test('Should throw if InsertActivityRepository throws', async () => {
+    const { sut, InsertActivityRepositoryStub } = makeSut()
+    jest.spyOn(InsertActivityRepositoryStub, 'insert').mockImplementation(() => {
       throw new Error()
     })
-    const response = sut.save(makeFakeSaveActivityModel())
+    const response = sut.insert(makeFakeCreateActivityModel())
     await expect(response).rejects.toThrow()
   })
 })

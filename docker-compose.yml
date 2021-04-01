@@ -8,6 +8,16 @@ services:
       - ./data:/data/db
     ports: 
       - "27017:27017"
+  pg:
+    container_name: pg-container
+    image: postgres:13
+    restart: always
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
+    ports: 
+      - "5432:5432"
+    environment: 
+      - POSTGRES_PASSWORD=example
   api:
     container_name: api-container
     image: node:14
@@ -16,6 +26,7 @@ services:
     command: bash -c "npm install --only=prod && npm run debug"
     environment: 
       - MONGO_URL=mongodb://mongo:27017/clean-node-api
+      - PG_URL=postgresql://user:user@pg:5432/clean-node-api
     volumes: 
       - ./dist/:/usr/src/clean-node-api/dist/
       - ./package.json:/usr/src/clean-node-api/package.json
@@ -24,4 +35,5 @@ services:
       - "9222:9222"
     links: 
       - mongo
+      - pg
 

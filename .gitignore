@@ -105,4 +105,5 @@ dist
 
 globalConfig.json
 data
+pg-data
 !src/data
