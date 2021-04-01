@@ -62,38 +62,51 @@ describe('DbSaveActivity UseCase', () => {
     MockDate.reset()
   })
 
-  test('Should call InsertActivityRepository with correct values', async () => {
-    const { sut, insertActivityRepositoryStub } = makeSut()
-    const saveSpy = jest.spyOn(insertActivityRepositoryStub, 'insert')
-    await sut.insert(makeFakeCreateActivityModel())
-    expect(saveSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel())
-  })
-
-  test('Should return an activity on success', async () => {
-    const { sut } = makeSut()
-    const activity = await sut.insert(makeFakeCreateActivityModel())
-    expect(activity).toEqual(makeFakeActivityModel())
-  })
-
-  test('Should throw if InsertActivityRepository throws', async () => {
-    const { sut, insertActivityRepositoryStub } = makeSut()
-    jest.spyOn(insertActivityRepositoryStub, 'insert').mockImplementation(() => {
-      throw new Error()
+  describe('Insert', () => {
+    test('Should call InsertActivityRepository with correct values', async () => {
+      const { sut, insertActivityRepositoryStub } = makeSut()
+      const saveSpy = jest.spyOn(insertActivityRepositoryStub, 'insert')
+      await sut.insert(makeFakeCreateActivityModel())
+      expect(saveSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel())
     })
-    const response = sut.insert(makeFakeCreateActivityModel())
-    await expect(response).rejects.toThrow()
+
+    test('Should return an activity on success', async () => {
+      const { sut } = makeSut()
+      const activity = await sut.insert(makeFakeCreateActivityModel())
+      expect(activity).toEqual(makeFakeActivityModel())
+    })
+
+    test('Should throw if InsertActivityRepository throws', async () => {
+      const { sut, insertActivityRepositoryStub } = makeSut()
+      jest.spyOn(insertActivityRepositoryStub, 'insert').mockImplementation(() => {
+        throw new Error()
+      })
+      const response = sut.insert(makeFakeCreateActivityModel())
+      await expect(response).rejects.toThrow()
+    })
   })
 
-  test('Should call UpdateActivityRepository with correct values', async () => {
-    const { sut, updateActivityRepositoryStub } = makeSut()
-    const updateSpy = jest.spyOn(updateActivityRepositoryStub, 'update')
-    await sut.update(makeFakeUpdateActivityModel(), 'any_id')
-    expect(updateSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel(), 'any_id')
-  })
+  describe('Update', () => {
+    test('Should call UpdateActivityRepository with correct values', async () => {
+      const { sut, updateActivityRepositoryStub } = makeSut()
+      const updateSpy = jest.spyOn(updateActivityRepositoryStub, 'update')
+      await sut.update(makeFakeUpdateActivityModel(), 'any_id')
+      expect(updateSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel(), 'any_id')
+    })
 
-  test('Should return an activity on success', async () => {
-    const { sut } = makeSut()
-    const activity = await sut.update(makeFakeUpdateActivityModel(), 'any_id')
-    expect(activity).toEqual(makeFakeActivityModel())
+    test('Should return an activity on success', async () => {
+      const { sut } = makeSut()
+      const activity = await sut.update(makeFakeUpdateActivityModel(), 'any_id')
+      expect(activity).toEqual(makeFakeActivityModel())
+    })
+
+    test('Should throw if UpdateActivityRepository throws', async () => {
+      const { sut, updateActivityRepositoryStub } = makeSut()
+      jest.spyOn(updateActivityRepositoryStub, 'update').mockImplementation(() => {
+        throw new Error()
+      })
+      const response = sut.update(makeFakeUpdateActivityModel(), 'any_id')
+      await expect(response).rejects.toThrow()
+    })
   })
 })
