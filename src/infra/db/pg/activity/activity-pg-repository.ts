@@ -1,14 +1,14 @@
-import { InsertActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
+import { InsertActivityRepository, UpdateActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
 import { ActivityModel } from '@/domain/models/activity'
 import { CreateActivityModel } from '@/domain/usecases/activity/insert-activity'
 import { PostgresHelper } from '../helpers/pg-helper'
 
-export class ActivityMongoRepository implements InsertActivityRepository {
-  private async update (activity: CreateActivityModel, id: string): Promise<ActivityModel> {
+export class ActivityMongoRepository implements InsertActivityRepository, UpdateActivityRepository {
+  async update (activity: CreateActivityModel, id: string): Promise<ActivityModel> {
     const text = 'UPDATE activity SET account_id=$1, ship_id=$2, date=$3 WHERE id=$4 RETURNING *'
     const values = [activity.accountId, activity.shipId, activity.date, id]
     const activityUpdated = await PostgresHelper.client.query(text, values)
-    return activityUpdated.rows[0]
+    return this.map(activityUpdated.rows[0])
   }
 
   async insert (activity: CreateActivityModel): Promise<ActivityModel> {
