@@ -1,4 +1,4 @@
-import { DbAddShip } from '@/data/usecases/add-ship/db-add-ship'
+import { DbAddShip } from '@/data/usecases/ship/add-ship/db-add-ship'
 import { AddShip } from '@/domain/usecases/ship/add-ship'
 import { ShipMongoRepository } from '@/infra/db/mongodb/ship/ship-mongo-repository'
 
