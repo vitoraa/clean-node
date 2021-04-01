@@ -1,3 +1,5 @@
+import { ActivityModel } from '@/domain/models/activity'
+import { AddActivity, AddActivityModel } from '@/domain/usecases/activity/add-activity'
 import { MissingParamError } from '@/presentation/errors'
 import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 import { HttpRequest } from '@/presentation/protocols'
@@ -11,6 +13,13 @@ const makeFakeRequest = (): HttpRequest => ({
   }
 })
 
+const makeFakeResponse = (): ActivityModel => ({
+  id: 'any_id',
+  accountId: 'any_account',
+  shipId: 'any_ship',
+  date: new Date()
+})
+
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
     validate (input: any): Error {
@@ -20,17 +29,29 @@ const makeValidation = (): Validation => {
   return new ValidationStub()
 }
 
+const makeAddActivity = (): AddActivity => {
+  class AddActivityStub implements AddActivity {
+    async add (data: AddActivityModel): Promise<ActivityModel> {
+      return makeFakeResponse()
+    }
+  }
+  return new AddActivityStub()
+}
+
 type SutTypes = {
   sut: AddActivityController
   validationStub: Validation
+  addActivityStub: AddActivity
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidation()
-  const sut = new AddActivityController(validationStub)
+  const addActivityStub = makeAddActivity()
+  const sut = new AddActivityController(addActivityStub, validationStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    addActivityStub
   }
 }
 
@@ -59,5 +80,15 @@ describe('Save Activity Controller', () => {
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  })
+
+  test('Should call AddActivity with corrects params', async () => {
+    const { sut, addActivityStub } = makeSut()
+    const addSpy = jest.spyOn(addActivityStub, 'add')
+    await sut.handle(makeFakeRequest())
+    expect(addSpy).toHaveBeenCalledWith({
+      accountId: 'any_account',
+      shipId: 'any_ship'
+    })
   })
 })

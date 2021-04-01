@@ -1,12 +1,12 @@
 import { DbSaveActivity } from './db-save-activity'
 import { InsertActivityRepository, UpdateActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
 import { ActivityModel } from '@/domain/models/activity'
-import { CreateActivityModel } from '@/domain/usecases/activity/insert-activity'
+import { AddActivityModel } from '@/domain/usecases/activity/add-activity'
 
 import MockDate from 'mockdate'
 import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
 
-const makeFakeCreateActivityModel = (): CreateActivityModel => ({
+const makeFakeCreateActivityModel = (): AddActivityModel => ({
   date: new Date(),
   accountId: 'account_id',
   shipId: 'ship_id'
@@ -66,13 +66,13 @@ describe('DbSaveActivity UseCase', () => {
     test('Should call InsertActivityRepository with correct values', async () => {
       const { sut, insertActivityRepositoryStub } = makeSut()
       const saveSpy = jest.spyOn(insertActivityRepositoryStub, 'insert')
-      await sut.insert(makeFakeCreateActivityModel())
+      await sut.add(makeFakeCreateActivityModel())
       expect(saveSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel())
     })
 
     test('Should return an activity on success', async () => {
       const { sut } = makeSut()
-      const activity = await sut.insert(makeFakeCreateActivityModel())
+      const activity = await sut.add(makeFakeCreateActivityModel())
       expect(activity).toEqual(makeFakeActivityModel())
     })
 
@@ -81,7 +81,7 @@ describe('DbSaveActivity UseCase', () => {
       jest.spyOn(insertActivityRepositoryStub, 'insert').mockImplementation(() => {
         throw new Error()
       })
-      const response = sut.insert(makeFakeCreateActivityModel())
+      const response = sut.add(makeFakeCreateActivityModel())
       await expect(response).rejects.toThrow()
     })
   })

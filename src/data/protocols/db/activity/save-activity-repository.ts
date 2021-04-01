@@ -1,10 +1,11 @@
 import { ActivityModel } from '@/domain/models/activity'
-import { CreateActivityModel } from '@/domain/usecases/activity/insert-activity'
+import { AddActivityModel } from '@/domain/usecases/activity/add-activity'
+import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
 
 export interface InsertActivityRepository {
-  insert: (activity: CreateActivityModel) => Promise<ActivityModel>
+  insert: (activity: AddActivityModel) => Promise<ActivityModel>
 }
 
 export interface UpdateActivityRepository {
-  update: (activity: CreateActivityModel, id: string) => Promise<ActivityModel>
+  update: (activity: UpdateActivityModel, id: string) => Promise<ActivityModel>
 }
