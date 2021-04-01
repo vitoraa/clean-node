@@ -1,4 +1,5 @@
-import { serverError } from '@/presentation/helpers/http/http-helper'
+import { MissingParamError } from '@/presentation/errors'
+import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 import { HttpRequest } from '@/presentation/protocols'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddActivityController } from './add-activity-controller'
@@ -51,5 +52,12 @@ describe('Save Activity Controller', () => {
     })
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 400 if validation returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
