@@ -90,4 +90,10 @@ describe('DbSaveActivity UseCase', () => {
     await sut.update(makeFakeUpdateActivityModel(), 'any_id')
     expect(updateSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel(), 'any_id')
   })
+
+  test('Should return an activity on success', async () => {
+    const { sut } = makeSut()
+    const activity = await sut.update(makeFakeUpdateActivityModel(), 'any_id')
+    expect(activity).toEqual(makeFakeActivityModel())
+  })
 })

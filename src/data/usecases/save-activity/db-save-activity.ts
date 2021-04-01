@@ -14,7 +14,7 @@ export class DbSaveActivity implements InsertActivity, UpdateActivity {
   }
 
   async update (data: UpdateActivityModel, id: string): Promise<ActivityModel> {
-    await this.updateActivityRepository.update(data, id)
-    return null
+    const activity = await this.updateActivityRepository.update(data, id)
+    return activity
   }
 }
