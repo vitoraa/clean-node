@@ -38,6 +38,10 @@ describe('Activity Postgres Repository', () => {
     await PostgresHelper.disconnect()
   })
 
+  beforeEach(async () => {
+    await PostgresHelper.client.query('DELETE FROM activity')
+  })
+
   test('Should return an activity on insert success', async () => {
     const { sut } = makeSut()
     const activity = await sut.insert(makeFakeSaveActivityModel())

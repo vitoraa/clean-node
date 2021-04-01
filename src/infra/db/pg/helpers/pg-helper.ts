@@ -11,10 +11,5 @@ export const PostgresHelper = {
   async disconnect (): Promise<void> {
     await this.client.end()
     this.client = null
-  },
-
-  map (collection: any): any {
-    const { _id, ...collectionWithOutId } = collection
-    return Object.assign({}, collectionWithOutId, { id: _id })
   }
 }
