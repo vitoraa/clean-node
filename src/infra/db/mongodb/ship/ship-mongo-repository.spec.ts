@@ -74,4 +74,15 @@ describe('Ship Mongo Repository', () => {
     expect(ships).toBeTruthy()
     expect(ships).toEqual([])
   })
+
+  test('Should return a ship on loadById success', async () => {
+    const { sut } = makeSut()
+    const newShip = await shipCollection.insertOne(makeFakeShip())
+    const ship = await sut.loadById(newShip.ops[0]._id)
+    expect(ship).toBeTruthy()
+    expect(ship.id).toBeTruthy()
+    expect(ship.name).toBe('any_name')
+    expect(ship.ab).toBe(10)
+    expect(ship.imo).toBe('any_imo')
+  })
 })

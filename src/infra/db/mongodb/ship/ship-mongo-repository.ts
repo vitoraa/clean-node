@@ -2,10 +2,17 @@ import { AddShipRepository } from '@/data/protocols/db/ship/add-ship-repository'
 import { LoadShipByImoRepository } from '@/data/protocols/db/ship/load-ship-by-imo-repository'
 import { ShipModel } from '@/domain/models/ship'
 import { AddShipModel } from '@/domain/usecases/ship/add-ship'
+import { LoadShipById } from '@/domain/usecases/ship/load-ship-by-id'
 import { LoadShips, LoadShipsModel } from '@/domain/usecases/ship/load-ships'
 import { MongoHelper } from '../helpers/mongo-helper'
 
-export class ShipMongoRepository implements AddShipRepository, LoadShipByImoRepository, LoadShips {
+export class ShipMongoRepository implements AddShipRepository, LoadShipByImoRepository, LoadShips, LoadShipById {
+  async loadById (id: string): Promise<ShipModel> {
+    const shipCollection = await MongoHelper.getCollection('ships')
+    const shipFound = await shipCollection.findOne({ _id: id })
+    return shipFound && MongoHelper.map(shipFound)
+  }
+
   async loadByImo (imo: string): Promise<ShipModel> {
     const shipCollection = await MongoHelper.getCollection('ships')
     const shipFound = await shipCollection.findOne({ imo })
