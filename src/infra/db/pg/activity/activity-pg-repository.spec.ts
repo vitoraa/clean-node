@@ -1,4 +1,4 @@
-import { CreateActivityModel } from '@/domain/usecases/activity/insert-activity'
+import { AddActivityModel } from '@/domain/usecases/activity/add-activity'
 import env from '@/main/config/env'
 import { PostgresHelper } from '../helpers/pg-helper'
 import { ActivityMongoRepository } from './activity-pg-repository'
@@ -7,13 +7,11 @@ import MockDate from 'mockdate'
 import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
 
 const makeFakeUpdateActivityModel = (): UpdateActivityModel => ({
-  date: new Date(),
   accountId: 'account_id_other',
   shipId: 'ship_id_other'
 })
 
-const makeFakeSaveActivityModel = (): CreateActivityModel => ({
-  date: new Date(),
+const makeFakeAddActivityModel = (): AddActivityModel => ({
   accountId: 'account_id',
   shipId: 'ship_id'
 })
@@ -44,7 +42,7 @@ describe('Activity Postgres Repository', () => {
 
   test('Should return an activity on insert success', async () => {
     const { sut } = makeSut()
-    const activity = await sut.insert(makeFakeSaveActivityModel())
+    const activity = await sut.insert(makeFakeAddActivityModel())
     expect(activity).toBeTruthy()
     expect(activity.id).toBeTruthy()
     expect(activity.accountId).toBe('account_id')
@@ -54,7 +52,7 @@ describe('Activity Postgres Repository', () => {
 
   test('Should return an activity on update success', async () => {
     const { sut } = makeSut()
-    const newActivity = await sut.insert(makeFakeSaveActivityModel())
+    const newActivity = await sut.insert(makeFakeAddActivityModel())
     const updateActivity = await sut.update(makeFakeUpdateActivityModel(), newActivity.id)
     expect(updateActivity).toBeTruthy()
     expect(updateActivity.id).toBeTruthy()

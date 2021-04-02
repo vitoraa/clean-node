@@ -4,4 +4,4 @@ export interface UpdateActivity {
   update: (data: UpdateActivityModel, id: string) => Promise<ActivityModel>
 }
 
-export type UpdateActivityModel = Omit<ActivityModel, 'id'>
+export type UpdateActivityModel = Omit<ActivityModel, 'id' | 'date'>

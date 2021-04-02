@@ -7,19 +7,17 @@ import MockDate from 'mockdate'
 import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
 
 const makeFakeCreateActivityModel = (): AddActivityModel => ({
-  date: new Date(),
   accountId: 'account_id',
   shipId: 'ship_id'
 })
 
 const makeFakeUpdateActivityModel = (): UpdateActivityModel => ({
-  date: new Date(),
   accountId: 'account_id',
   shipId: 'ship_id'
 })
 
 const makeFakeActivityModel = (): ActivityModel => Object.assign(
-  {}, makeFakeCreateActivityModel(), { id: 'any_id' }
+  {}, makeFakeCreateActivityModel(), { id: 'any_id', date: new Date() }
 )
 
 const makeInsertActivityRepository = (): InsertActivityRepository => {
