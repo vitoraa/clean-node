@@ -7,6 +7,7 @@ import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/h
 import { HttpRequest } from '@/presentation/protocols'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddActivityController } from './add-activity-controller'
+import MockDate from 'mockdate'
 
 const makeFakeRequest = (): HttpRequest => ({
   params: {
@@ -80,6 +81,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Save Activity Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   test('Should call LoadShipById with corrects params', async () => {
     const { sut, loadShipByIdStub } = makeSut()
     const validateSpy = jest.spyOn(loadShipByIdStub, 'loadById')
