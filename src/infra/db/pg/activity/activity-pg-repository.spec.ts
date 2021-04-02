@@ -1,7 +1,7 @@
 import { AddActivityModel } from '@/domain/usecases/activity/add-activity'
 import env from '@/main/config/env'
 import { PostgresHelper } from '../helpers/pg-helper'
-import { ActivityMongoRepository } from './activity-pg-repository'
+import { ActivityPostgresRepository } from './activity-pg-repository'
 
 import MockDate from 'mockdate'
 import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
@@ -17,11 +17,11 @@ const makeFakeAddActivityModel = (): AddActivityModel => ({
 })
 
 type SutTypes = {
-  sut: ActivityMongoRepository
+  sut: ActivityPostgresRepository
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new ActivityMongoRepository()
+  const sut = new ActivityPostgresRepository()
   return { sut }
 }
 

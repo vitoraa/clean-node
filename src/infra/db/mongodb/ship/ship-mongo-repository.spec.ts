@@ -85,4 +85,10 @@ describe('Ship Mongo Repository', () => {
     expect(ship.ab).toBe(10)
     expect(ship.imo).toBe('any_imo')
   })
+
+  test('Should return null if loadById fails', async () => {
+    const { sut } = makeSut()
+    const ship = await sut.loadById('any_id')
+    expect(ship).toBeFalsy()
+  })
 })

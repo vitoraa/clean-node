@@ -4,7 +4,7 @@ import { AddActivityModel } from '@/domain/usecases/activity/add-activity'
 import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
 import { PostgresHelper } from '../helpers/pg-helper'
 
-export class ActivityMongoRepository implements InsertActivityRepository, UpdateActivityRepository {
+export class ActivityPostgresRepository implements InsertActivityRepository, UpdateActivityRepository {
   async update (activity: UpdateActivityModel, id: string): Promise<ActivityModel> {
     const text = 'UPDATE activity SET account_id=$1, ship_id=$2 WHERE id=$3 RETURNING *'
     const values = [activity.accountId, activity.shipId, id]
