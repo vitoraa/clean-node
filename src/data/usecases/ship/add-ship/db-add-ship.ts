@@ -1,5 +1,5 @@
 import { ShipModel } from '@/domain/models/ship'
-import { AddShip, AddShipModel } from '@/domain/usecases/ship/add-ship'
+import { AddShip, AddShipParams } from '@/domain/usecases/ship/add-ship'
 import { AddShipRepository } from '@/data/protocols/db/ship/add-ship-repository'
 import { LoadShipByImoRepository } from '@/data/protocols/db/ship/load-ship-by-imo-repository'
 
@@ -9,7 +9,7 @@ export class DbAddShip implements AddShip {
     private readonly loadShipByImoRepository: LoadShipByImoRepository
   ) { }
 
-  async add (ship: AddShipModel): Promise<ShipModel> {
+  async add (ship: AddShipParams): Promise<ShipModel> {
     const shipWithSameImo = await this.loadShipByImoRepository.loadByImo(ship.imo)
     if (!shipWithSameImo) {
       const newShip = await this.addShipRepository.add(ship)

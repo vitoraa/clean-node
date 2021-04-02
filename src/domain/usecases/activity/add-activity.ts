@@ -1,7 +1,7 @@
 import { ActivityModel } from '@/domain/models/activity'
 
 export interface AddActivity {
-  add: (data: AddActivityModel) => Promise<ActivityModel>
+  add: (data: AddActivityParams) => Promise<ActivityModel>
 }
 
-export type AddActivityModel = Omit<ActivityModel, 'id' | 'date'>
+export type AddActivityParams = Omit<ActivityModel, 'id' | 'date'>

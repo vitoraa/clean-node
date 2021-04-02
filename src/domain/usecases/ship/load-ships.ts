@@ -1,10 +1,10 @@
 import { ShipModel } from '@/domain/models/ship'
 
 export interface LoadShips {
-  load: (params: LoadShipsModel) => Promise<ShipModel[]>
+  load: (params: LoadShipsParams) => Promise<ShipModel[]>
 }
 
-export type LoadShipsModel = {
+export type LoadShipsParams = {
   name?: string
   imo?: string
   ab?: number

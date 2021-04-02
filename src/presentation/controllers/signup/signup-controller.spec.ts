@@ -1,9 +1,9 @@
 import { SignUpController } from './signup-controller'
 import { MissingParamError, ServerError, FieldInUseError } from '@/presentation/errors'
-import { AddAccount, AddAccountModel, AccountModel, Validation } from './signup-controller-protocols'
+import { AddAccount, AddAccountParams, AccountModel, Validation } from './signup-controller-protocols'
 import { HttpRequest } from '@/presentation/protocols'
 import { badRequest, ok, serverError, forbidden } from '@/presentation/helpers/http/http-helper'
-import { Authentication, AuthenticationModel } from '../login/login-controller-protocols'
+import { Authentication, AuthenticationParams } from '../login/login-controller-protocols'
 
 const makeFakeRequest = (): HttpRequest => (
   {
@@ -32,7 +32,7 @@ type SutTypes = {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       return makeFakeAccount()
     }
   }
@@ -41,7 +41,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return 'any_token'
     }
   }

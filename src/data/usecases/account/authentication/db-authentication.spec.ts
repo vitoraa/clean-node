@@ -4,9 +4,9 @@ import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-a
 import { Encrypter } from '@/data/protocols/criptography/encrypter'
 import { DbAuthentication } from './db-authentication'
 import { UpdateAccessTokenRepository } from '@/data/protocols/db/account/update-access-token-repository'
-import { AuthenticationModel } from '@/domain/usecases/account/authentication'
+import { AuthenticationParams } from '@/domain/usecases/account/authentication'
 
-const makeFakeAuthentication = (): AuthenticationModel => ({
+const makeFakeAuthentication = (): AuthenticationParams => ({
   email: 'any_email@email.com',
   password: 'any_password'
 })

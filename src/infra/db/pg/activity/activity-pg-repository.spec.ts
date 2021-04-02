@@ -1,17 +1,17 @@
-import { AddActivityModel } from '@/domain/usecases/activity/add-activity'
+import { AddActivityParams } from '@/domain/usecases/activity/add-activity'
 import env from '@/main/config/env'
 import { PostgresHelper } from '../helpers/pg-helper'
 import { ActivityPostgresRepository } from './activity-pg-repository'
 
 import MockDate from 'mockdate'
-import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
+import { UpdateActivityParams } from '@/domain/usecases/activity/update-activity'
 
-const makeFakeUpdateActivityModel = (): UpdateActivityModel => ({
+const makeFakeUpdateActivityParams = (): UpdateActivityParams => ({
   accountId: 'account_id_other',
   shipId: 'ship_id_other'
 })
 
-const makeFakeAddActivityModel = (): AddActivityModel => ({
+const makeFakeAddActivityParams = (): AddActivityParams => ({
   accountId: 'account_id',
   shipId: 'ship_id'
 })
@@ -42,7 +42,7 @@ describe('Activity Postgres Repository', () => {
 
   test('Should return an activity on insert success', async () => {
     const { sut } = makeSut()
-    const activity = await sut.insert(makeFakeAddActivityModel())
+    const activity = await sut.insert(makeFakeAddActivityParams())
     expect(activity).toBeTruthy()
     expect(activity.id).toBeTruthy()
     expect(activity.accountId).toBe('account_id')
@@ -52,8 +52,8 @@ describe('Activity Postgres Repository', () => {
 
   test('Should return an activity on update success', async () => {
     const { sut } = makeSut()
-    const newActivity = await sut.insert(makeFakeAddActivityModel())
-    const updateActivity = await sut.update(makeFakeUpdateActivityModel(), newActivity.id)
+    const newActivity = await sut.insert(makeFakeAddActivityParams())
+    const updateActivity = await sut.update(makeFakeUpdateActivityParams(), newActivity.id)
     expect(updateActivity).toBeTruthy()
     expect(updateActivity.id).toBeTruthy()
     expect(updateActivity.accountId).toBe('account_id_other')

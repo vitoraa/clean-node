@@ -4,7 +4,7 @@ import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/h
 import { HttpRequest } from '@/presentation/protocols'
 import { AddShipController } from './add-ship-controller'
 import { Validation } from '../../login/login-controller-protocols'
-import { AddShip, AddShipModel } from '@/domain/usecases/ship/add-ship'
+import { AddShip, AddShipParams } from '@/domain/usecases/ship/add-ship'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -22,7 +22,7 @@ const makeFakeResponse = (): ShipModel => ({
 
 const makeAddShip = (): AddShip => {
   class AddShipStub implements AddShip {
-    async add (ship: AddShipModel): Promise<ShipModel> {
+    async add (ship: AddShipParams): Promise<ShipModel> {
       return makeFakeResponse()
     }
   }

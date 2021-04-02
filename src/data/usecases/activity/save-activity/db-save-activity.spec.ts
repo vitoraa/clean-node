@@ -1,17 +1,17 @@
 import { DbSaveActivity } from './db-save-activity'
 import { InsertActivityRepository, UpdateActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
 import { ActivityModel } from '@/domain/models/activity'
-import { AddActivityModel } from '@/domain/usecases/activity/add-activity'
+import { AddActivityParams } from '@/domain/usecases/activity/add-activity'
 
 import MockDate from 'mockdate'
-import { UpdateActivityModel } from '@/domain/usecases/activity/update-activity'
+import { UpdateActivityParams } from '@/domain/usecases/activity/update-activity'
 
-const makeFakeCreateActivityModel = (): AddActivityModel => ({
+const makeFakeCreateActivityModel = (): AddActivityParams => ({
   accountId: 'account_id',
   shipId: 'ship_id'
 })
 
-const makeFakeUpdateActivityModel = (): UpdateActivityModel => ({
+const makeFakeUpdateActivityParams = (): UpdateActivityParams => ({
   accountId: 'account_id',
   shipId: 'ship_id'
 })
@@ -88,13 +88,13 @@ describe('DbSaveActivity UseCase', () => {
     test('Should call UpdateActivityRepository with correct values', async () => {
       const { sut, updateActivityRepositoryStub } = makeSut()
       const updateSpy = jest.spyOn(updateActivityRepositoryStub, 'update')
-      await sut.update(makeFakeUpdateActivityModel(), 'any_id')
+      await sut.update(makeFakeUpdateActivityParams(), 'any_id')
       expect(updateSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel(), 'any_id')
     })
 
     test('Should return an activity on success', async () => {
       const { sut } = makeSut()
-      const activity = await sut.update(makeFakeUpdateActivityModel(), 'any_id')
+      const activity = await sut.update(makeFakeUpdateActivityParams(), 'any_id')
       expect(activity).toEqual(makeFakeActivityModel())
     })
 
@@ -103,7 +103,7 @@ describe('DbSaveActivity UseCase', () => {
       jest.spyOn(updateActivityRepositoryStub, 'update').mockImplementation(() => {
         throw new Error()
       })
-      const response = sut.update(makeFakeUpdateActivityModel(), 'any_id')
+      const response = sut.update(makeFakeUpdateActivityParams(), 'any_id')
       await expect(response).rejects.toThrow()
     })
   })

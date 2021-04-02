@@ -1,9 +1,9 @@
 import { ShipModel } from '@/domain/models/ship'
-import { LoadShipsModel } from '@/domain/usecases/ship/load-ships'
+import { LoadShipsParams } from '@/domain/usecases/ship/load-ships'
 import { LoadShipsRepository } from '@/data/protocols/db/ship/load-ships-repository'
 import { DbLoadShips } from './db-load-ships'
 
-const makeFakeLoadShipsData = (): LoadShipsModel => ({
+const makeFakeLoadShipsData = (): LoadShipsParams => ({
   ab: 10,
   name: 'any_name',
   imo: 'any_imo'
@@ -18,7 +18,7 @@ const makeFakeShipModel = (): ShipModel => ({
 
 const makeLoadShipsRepository = (): LoadShipsRepository => {
   class LoadShipsRepositoryStub implements LoadShipsRepository {
-    async load (params: LoadShipsModel): Promise<ShipModel[]> {
+    async load (params: LoadShipsParams): Promise<ShipModel[]> {
       return [makeFakeShipModel(), makeFakeShipModel()]
     }
   }

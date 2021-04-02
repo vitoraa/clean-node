@@ -1,5 +1,5 @@
 import { ShipModel } from '@/domain/models/ship'
-import { LoadShips, LoadShipsModel } from '@/domain/usecases/ship/load-ships'
+import { LoadShips, LoadShipsParams } from '@/domain/usecases/ship/load-ships'
 import { HttpRequest } from '@/presentation/protocols'
 import { Validation } from '../../signup/signup-controller-protocols'
 import { LoadShipsController } from './load-ships-controller'
@@ -27,7 +27,7 @@ const makeFakeResponse = (): ShipModel[] => ([{
 
 const makeAddShip = (): LoadShips => {
   class LoadShipsStub implements LoadShips {
-    async load (params: LoadShipsModel): Promise<ShipModel[]> {
+    async load (params: LoadShipsParams): Promise<ShipModel[]> {
       return makeFakeResponse()
     }
   }

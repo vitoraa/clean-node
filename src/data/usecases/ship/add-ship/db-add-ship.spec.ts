@@ -1,10 +1,10 @@
 import { ShipModel } from '@/domain/models/ship'
-import { AddShipModel } from '@/domain/usecases/ship/add-ship'
+import { AddShipParams } from '@/domain/usecases/ship/add-ship'
 import { DbAddShip } from './db-add-ship'
 import { AddShipRepository } from '@/data/protocols/db/ship/add-ship-repository'
 import { LoadShipByImoRepository } from '@/data/protocols/db/ship/load-ship-by-imo-repository'
 
-const makeFakeShipData = (): AddShipModel => ({
+const makeFakeShipData = (): AddShipParams => ({
   ab: 10,
   name: 'any_name',
   imo: 'any_imo'
@@ -19,7 +19,7 @@ const makeFakeShipModel = (): ShipModel => ({
 
 const makeAddShipRepository = (): AddShipRepository => {
   class AddShipRepositoryStub implements AddShipRepository {
-    async add (ship: AddShipModel): Promise<ShipModel> {
+    async add (ship: AddShipParams): Promise<ShipModel> {
       return makeFakeShipModel()
     }
   }
