@@ -94,6 +94,15 @@ describe('Save Activity Controller', () => {
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('shipId')))
   })
 
+  test('Should throws 500 if LoadShipById throws', async () => {
+    const { sut, loadShipByIdStub } = makeSut()
+    jest.spyOn(loadShipByIdStub, 'loadById').mockImplementation(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
   test('Should call Validation with corrects params', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
