@@ -4,7 +4,7 @@ import { AddAccount, AddAccountParams, AccountModel, Validation } from './signup
 import { HttpRequest } from '@/presentation/protocols'
 import { badRequest, ok, serverError, forbidden } from '@/presentation/helpers/http/http-helper'
 import { Authentication, AuthenticationParams } from '../login/login-controller-protocols'
-import { mockAccountModel } from '@/domain/test'
+import { mockAccountModel, throwError } from '@/domain/test'
 
 const makeFakeRequest = (): HttpRequest => (
   {
@@ -128,9 +128,7 @@ describe('SignUp Controller', () => {
 
   test('Should thows 500 if Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'auth').mockImplementation(() => {
-      throw new Error()
-    })
+    jest.spyOn(authenticationStub, 'auth').mockImplementation(throwError)
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })

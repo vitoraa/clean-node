@@ -1,11 +1,6 @@
+import { mockAddShipParams } from '@/domain/test'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ShipMongoRepository } from './ship-mongo-repository'
-
-const makeFakeShip = (): any => ({
-  name: 'any_name',
-  ab: 10,
-  imo: 'any_imo'
-})
 
 type SutTypes = {
   sut: ShipMongoRepository
@@ -34,7 +29,7 @@ describe('Ship Mongo Repository', () => {
 
   test('Should return a ship on add success', async () => {
     const { sut } = makeSut()
-    const ship = await sut.add(makeFakeShip())
+    const ship = await sut.add(mockAddShipParams())
     expect(ship).toBeTruthy()
     expect(ship.id).toBeTruthy()
     expect(ship.name).toBe('any_name')
@@ -44,7 +39,7 @@ describe('Ship Mongo Repository', () => {
 
   test('Should return a ship on loadByImo success', async () => {
     const { sut } = makeSut()
-    await shipCollection.insertOne(makeFakeShip())
+    await shipCollection.insertOne(mockAddShipParams())
     const ship = await sut.loadByImo('any_imo')
     expect(ship).toBeTruthy()
     expect(ship.id).toBeTruthy()
@@ -61,8 +56,8 @@ describe('Ship Mongo Repository', () => {
 
   test('Should return all ships on load if object empty', async () => {
     const { sut } = makeSut()
-    await shipCollection.insertOne(makeFakeShip())
-    await shipCollection.insertOne(makeFakeShip())
+    await shipCollection.insertOne(mockAddShipParams())
+    await shipCollection.insertOne(mockAddShipParams())
     const ships = await sut.load({})
     expect(ships).toBeTruthy()
     expect(ships.length).toBe(2)
@@ -77,7 +72,7 @@ describe('Ship Mongo Repository', () => {
 
   test('Should return a ship on loadById success', async () => {
     const { sut } = makeSut()
-    const newShip = await shipCollection.insertOne(makeFakeShip())
+    const newShip = await shipCollection.insertOne(mockAddShipParams())
     const ship = await sut.loadById(newShip.ops[0]._id)
     expect(ship).toBeTruthy()
     expect(ship.id).toBeTruthy()

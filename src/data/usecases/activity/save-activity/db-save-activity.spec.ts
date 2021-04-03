@@ -1,42 +1,8 @@
 import { DbSaveActivity } from './db-save-activity'
 import { InsertActivityRepository, UpdateActivityRepository } from '@/data/protocols/db/activity/save-activity-repository'
-import { ActivityModel } from '@/domain/models/activity'
-import { AddActivityParams } from '@/domain/usecases/activity/add-activity'
-
 import MockDate from 'mockdate'
-import { UpdateActivityParams } from '@/domain/usecases/activity/update-activity'
-
-const makeFakeCreateActivityModel = (): AddActivityParams => ({
-  accountId: 'account_id',
-  shipId: 'ship_id'
-})
-
-const makeFakeUpdateActivityParams = (): UpdateActivityParams => ({
-  accountId: 'account_id',
-  shipId: 'ship_id'
-})
-
-const makeFakeActivityModel = (): ActivityModel => Object.assign(
-  {}, makeFakeCreateActivityModel(), { id: 'any_id', date: new Date() }
-)
-
-const makeInsertActivityRepository = (): InsertActivityRepository => {
-  class InsertActivityRepositoryStub implements InsertActivityRepository {
-    async insert (activity: ActivityModel): Promise<ActivityModel> {
-      return makeFakeActivityModel()
-    }
-  }
-  return new InsertActivityRepositoryStub()
-}
-
-const makeUpdateActivityRepository = (): UpdateActivityRepository => {
-  class UpdateActivityRepositoryStub implements UpdateActivityRepository {
-    async update (activity: ActivityModel, id: string): Promise<ActivityModel> {
-      return makeFakeActivityModel()
-    }
-  }
-  return new UpdateActivityRepositoryStub()
-}
+import { mockUpdateActivityParams, mockActivityModel, mockAddActivityParams, throwError } from '@/domain/test'
+import { mockInsertActivityRepository, mockUpdateActivityRepository } from '@/data/test'
 
 type SutTypes = {
   sut: DbSaveActivity
@@ -45,8 +11,8 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const insertActivityRepositoryStub = makeInsertActivityRepository()
-  const updateActivityRepositoryStub = makeUpdateActivityRepository()
+  const insertActivityRepositoryStub = mockInsertActivityRepository()
+  const updateActivityRepositoryStub = mockUpdateActivityRepository()
   const sut = new DbSaveActivity(insertActivityRepositoryStub, updateActivityRepositoryStub)
   return { sut, insertActivityRepositoryStub, updateActivityRepositoryStub }
 }
@@ -64,22 +30,20 @@ describe('DbSaveActivity UseCase', () => {
     test('Should call InsertActivityRepository with correct values', async () => {
       const { sut, insertActivityRepositoryStub } = makeSut()
       const saveSpy = jest.spyOn(insertActivityRepositoryStub, 'insert')
-      await sut.add(makeFakeCreateActivityModel())
-      expect(saveSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel())
+      await sut.add(mockAddActivityParams())
+      expect(saveSpy).toHaveBeenCalledWith(mockAddActivityParams())
     })
 
     test('Should return an activity on success', async () => {
       const { sut } = makeSut()
-      const activity = await sut.add(makeFakeCreateActivityModel())
-      expect(activity).toEqual(makeFakeActivityModel())
+      const activity = await sut.add(mockAddActivityParams())
+      expect(activity).toEqual(mockActivityModel())
     })
 
     test('Should throw if InsertActivityRepository throws', async () => {
       const { sut, insertActivityRepositoryStub } = makeSut()
-      jest.spyOn(insertActivityRepositoryStub, 'insert').mockImplementation(() => {
-        throw new Error()
-      })
-      const response = sut.add(makeFakeCreateActivityModel())
+      jest.spyOn(insertActivityRepositoryStub, 'insert').mockImplementation(throwError)
+      const response = sut.add(mockAddActivityParams())
       await expect(response).rejects.toThrow()
     })
   })
@@ -88,22 +52,20 @@ describe('DbSaveActivity UseCase', () => {
     test('Should call UpdateActivityRepository with correct values', async () => {
       const { sut, updateActivityRepositoryStub } = makeSut()
       const updateSpy = jest.spyOn(updateActivityRepositoryStub, 'update')
-      await sut.update(makeFakeUpdateActivityParams(), 'any_id')
-      expect(updateSpy).toHaveBeenCalledWith(makeFakeCreateActivityModel(), 'any_id')
+      await sut.update(mockUpdateActivityParams(), 'any_id')
+      expect(updateSpy).toHaveBeenCalledWith(mockAddActivityParams(), 'any_id')
     })
 
     test('Should return an activity on success', async () => {
       const { sut } = makeSut()
-      const activity = await sut.update(makeFakeUpdateActivityParams(), 'any_id')
-      expect(activity).toEqual(makeFakeActivityModel())
+      const activity = await sut.update(mockUpdateActivityParams(), 'any_id')
+      expect(activity).toEqual(mockActivityModel())
     })
 
     test('Should throw if UpdateActivityRepository throws', async () => {
       const { sut, updateActivityRepositoryStub } = makeSut()
-      jest.spyOn(updateActivityRepositoryStub, 'update').mockImplementation(() => {
-        throw new Error()
-      })
-      const response = sut.update(makeFakeUpdateActivityParams(), 'any_id')
+      jest.spyOn(updateActivityRepositoryStub, 'update').mockImplementation(throwError)
+      const response = sut.update(mockUpdateActivityParams(), 'any_id')
       await expect(response).rejects.toThrow()
     })
   })

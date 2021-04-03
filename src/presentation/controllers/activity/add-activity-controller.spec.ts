@@ -8,6 +8,7 @@ import { HttpRequest } from '@/presentation/protocols'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddActivityController } from './add-activity-controller'
 import MockDate from 'mockdate'
+import { mockShipModel, throwError } from '@/domain/test'
 
 const makeFakeRequest = (): HttpRequest => ({
   params: {
@@ -17,13 +18,6 @@ const makeFakeRequest = (): HttpRequest => ({
     accountId: 'any_account',
     shipId: 'any_ship'
   }
-})
-
-const makeFakeShipModel = (): ShipModel => ({
-  id: 'any_id',
-  ab: 10,
-  name: 'any_name',
-  imo: 'any_imo'
 })
 
 const makeFakeResponse = (): ActivityModel => ({
@@ -54,7 +48,7 @@ const makeAddActivity = (): AddActivity => {
 const makeLoadShipById = (): LoadShipById => {
   class LoadShipByIdStub implements LoadShipById {
     async loadById (id: string): Promise<ShipModel> {
-      return makeFakeShipModel()
+      return mockShipModel()
     }
   }
   return new LoadShipByIdStub()
@@ -105,9 +99,7 @@ describe('Save Activity Controller', () => {
 
   test('Should throws 500 if LoadShipById throws', async () => {
     const { sut, loadShipByIdStub } = makeSut()
-    jest.spyOn(loadShipByIdStub, 'loadById').mockImplementation(() => {
-      throw new Error()
-    })
+    jest.spyOn(loadShipByIdStub, 'loadById').mockImplementation(throwError)
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -124,9 +116,7 @@ describe('Save Activity Controller', () => {
 
   test('Should throws 500 if Validation throws', async () => {
     const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementation(() => {
-      throw new Error()
-    })
+    jest.spyOn(validationStub, 'validate').mockImplementation(throwError)
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -150,9 +140,7 @@ describe('Save Activity Controller', () => {
 
   test('Should throws 500 if AddActivity throws', async () => {
     const { sut, addActivityStub } = makeSut()
-    jest.spyOn(addActivityStub, 'add').mockImplementation(() => {
-      throw new Error()
-    })
+    jest.spyOn(addActivityStub, 'add').mockImplementation(throwError)
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })

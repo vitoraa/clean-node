@@ -5,6 +5,7 @@ import { Validation } from '../../signup/signup-controller-protocols'
 import { LoadShipsController } from './load-ships-controller'
 import { badRequest, notFound, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { MissingParamError, ServerError } from '@/presentation/errors'
+import { throwError } from '@/domain/test'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -80,9 +81,7 @@ describe('Add Ship Controller', () => {
 
   test('Should thows 500 if LoadShips throws', async () => {
     const { sut, loadShipsStub } = makeSut()
-    jest.spyOn(loadShipsStub, 'load').mockImplementation(() => {
-      throw new Error()
-    })
+    jest.spyOn(loadShipsStub, 'load').mockImplementation(throwError)
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })
@@ -97,9 +96,7 @@ describe('Add Ship Controller', () => {
 
   test('Should throws 500 if Validation throws', async () => {
     const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementation(() => {
-      throw new Error()
-    })
+    jest.spyOn(validationStub, 'validate').mockImplementation(throwError)
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })
