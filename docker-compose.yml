@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services: 
   mongo:
     container_name: mongo-container
@@ -8,16 +8,27 @@ services:
       - ./data:/data/db
     ports: 
       - "27017:27017"
-  pg:
-    container_name: pg-container
+  postgres:
+    container_name: postgres-container
     image: postgres:13
     restart: always
     volumes:
       - ./pg-data:/var/lib/postgresql/data
     ports: 
       - "5432:5432"
-    environment: 
-      - POSTGRES_PASSWORD=example
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=clean-node-api
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "vitor@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
   api:
     container_name: api-container
     image: node:14
@@ -26,14 +37,17 @@ services:
     command: bash -c "npm install --only=prod && npm run debug"
     environment: 
       - MONGO_URL=mongodb://mongo:27017/clean-node-api
-      - PG_URL=postgresql://user:user@pg:5432/clean-node-api
+      - PG_URL=postgresql://postgres:postgres@postgres:5432/clean-node-api
     volumes: 
       - ./dist/:/usr/src/clean-node-api/dist/
       - ./package.json:/usr/src/clean-node-api/package.json
     ports:
       - "5050:5050"
       - "9222:9222"
+    depends_on: 
+      - mongo
+      - postgres
     links: 
       - mongo
-      - pg
+      - postgres
 
