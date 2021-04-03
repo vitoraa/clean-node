@@ -1,11 +1,12 @@
-import { Client } from 'pg'
+import { Pool } from 'pg'
 
 export const PostgresHelper = {
-  client: null as Client,
+  client: null,
+  uri: null as string,
 
   async connect (uri: string): Promise<void> {
-    this.client = new Client(uri)
-    this.client.connect()
+    this.uri = uri
+    this.client = await new Pool({ connectionString: uri }).connect()
   },
 
   async disconnect (): Promise<void> {

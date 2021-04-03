@@ -41,7 +41,7 @@ describe('Activity Routes', () => {
   beforeAll(async () => {
     MockDate.set(new Date())
     await MongoHelper.connect(process.env.MONGO_URL)
-    await PostgresHelper.connect(env.pgUrl)
+    await PostgresHelper.connect(process.env.PG_URL)
   })
 
   afterAll(async () => {

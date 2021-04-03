@@ -1,5 +1,4 @@
 import { AddActivityParams } from '@/domain/usecases/activity/add-activity'
-import env from '@/main/config/env'
 import { PostgresHelper } from '../helpers/pg-helper'
 import { ActivityPostgresRepository } from './activity-pg-repository'
 
@@ -28,7 +27,7 @@ const makeSut = (): SutTypes => {
 describe('Activity Postgres Repository', () => {
   beforeAll(async () => {
     MockDate.set(new Date())
-    await PostgresHelper.connect(env.pgUrl)
+    await PostgresHelper.connect(process.env.PG_URL)
   })
 
   afterAll(async () => {
