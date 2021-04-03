@@ -5,23 +5,17 @@ import { Encrypter } from '@/data/protocols/criptography/encrypter'
 import { DbAuthentication } from './db-authentication'
 import { UpdateAccessTokenRepository } from '@/data/protocols/db/account/update-access-token-repository'
 import { AuthenticationParams } from '@/domain/usecases/account/authentication'
+import { mockAccountModel } from '@/domain/test'
 
 const makeFakeAuthentication = (): AuthenticationParams => ({
   email: 'any_email@email.com',
   password: 'any_password'
 })
 
-const makeFakeAccount = (): AccountModel => ({
-  id: 'any_id',
-  email: 'any_email@email.com',
-  name: 'any_name',
-  password: 'hashed_password'
-})
-
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel> {
-      const account = makeFakeAccount()
+      const account = mockAccountModel()
       return account
     }
   }
@@ -113,7 +107,7 @@ describe('DbAuthentication', () => {
     const compareSpy = jest.spyOn(hashComparerStub, 'compare')
     const fakeAuthentication = makeFakeAuthentication()
     await sut.auth(fakeAuthentication)
-    expect(compareSpy).toHaveBeenCalledWith(fakeAuthentication.password, makeFakeAccount().password)
+    expect(compareSpy).toHaveBeenCalledWith(fakeAuthentication.password, mockAccountModel().password)
   })
 
   test('Should throw if HashComparer throws', async () => {
@@ -136,7 +130,7 @@ describe('DbAuthentication', () => {
     const { sut, encrypterStub } = makeSut()
     const generateSpy = jest.spyOn(encrypterStub, 'encrypt')
     await sut.auth(makeFakeAuthentication())
-    expect(generateSpy).toHaveBeenCalledWith(makeFakeAccount().id)
+    expect(generateSpy).toHaveBeenCalledWith(mockAccountModel().id)
   })
 
   test('Should returns accesstoken if Encrypter succeeds', async () => {
@@ -158,7 +152,7 @@ describe('DbAuthentication', () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
     const generateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
     await sut.auth(makeFakeAuthentication())
-    expect(generateSpy).toHaveBeenCalledWith(makeFakeAccount().id, 'access_token')
+    expect(generateSpy).toHaveBeenCalledWith(mockAccountModel().id, 'access_token')
   })
 
   test('Should throw if UpdateAccessTokenRepository throws', async () => {

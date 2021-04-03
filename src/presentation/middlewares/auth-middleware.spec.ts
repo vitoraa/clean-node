@@ -4,13 +4,7 @@ import { AuthMiddleware } from './auth-middleware'
 import { AccountModel } from '@/domain/models/account'
 import { HttpRequest } from '../protocols'
 import { LoadAccountByToken } from '@/domain/usecases/account/load-account-by-token'
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  email: 'valid_email@email.com.br',
-  name: 'valid_name',
-  password: 'valid_password'
-})
+import { mockAccountModel } from '@/domain/test'
 
 const makeFakeRequest = (): HttpRequest => ({
   headers: {
@@ -21,7 +15,7 @@ const makeFakeRequest = (): HttpRequest => ({
 const makeLoadAccountByToken = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
     async loadByToken (token: string): Promise<AccountModel> {
-      return makeFakeAccount()
+      return mockAccountModel()
     }
   }
   return new LoadAccountByTokenStub()
