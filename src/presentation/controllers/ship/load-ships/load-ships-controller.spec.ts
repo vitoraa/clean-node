@@ -68,7 +68,7 @@ describe('Add Ship Controller', () => {
 
   test('Should return 404 if LoadShips returns empty', async () => {
     const { sut, loadShipsStub } = makeSut()
-    jest.spyOn(loadShipsStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve([])))
+    jest.spyOn(loadShipsStub, 'load').mockReturnValueOnce(Promise.resolve([]))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(notFound({}))
   })

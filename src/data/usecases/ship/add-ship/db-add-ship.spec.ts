@@ -56,7 +56,7 @@ describe('DbAddShip UseCase', () => {
 
   test('Should return null if LoadShipByImoRepository find a ship', async () => {
     const { sut, loadShipByImoRepositoryStub } = makeSut()
-    jest.spyOn(loadShipByImoRepositoryStub, 'loadByImo').mockReturnValueOnce(new Promise(resolve => resolve((mockShipModel()))))
+    jest.spyOn(loadShipByImoRepositoryStub, 'loadByImo').mockReturnValueOnce(Promise.resolve((mockShipModel())))
     const response = await sut.add(mockAddShipParams())
     expect(response).toBeNull()
   })
