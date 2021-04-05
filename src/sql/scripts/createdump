@@ -1,0 +1,15 @@
+#!/bin/bash
+echo -n "dbname > "
+read dbname
+echo -n "host > "
+read host
+echo -n "port > "
+read port
+echo -n "username > "
+read username
+echo -n "create file with name > "
+read filename
+pg_dump --dbname=clean-node-api --host=localhost --port=5432 --username=postgres --file=sql/create-tables.sql --verbose --clean --no-owner --schema-only --no-privileges --if-exists
+postgres --version
+echo "done"
+exit 0
