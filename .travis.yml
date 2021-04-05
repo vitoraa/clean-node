@@ -15,4 +15,4 @@ env:
     - PG_URL=postgresql://postgres:@localhost:5432/cleannodeapi
 before_script:
   - psql -c 'create database cleannodeapi;' -U postgres
-  - psql --dbname=cleannodeapi --file=sql/create-tables.sql
+  - psql --dbname=cleannodeapi --file=./sql/scripts/create-tables.sql postgres
