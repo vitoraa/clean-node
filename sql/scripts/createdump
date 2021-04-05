@@ -1,0 +1,14 @@
+#!/bin/bash
+echo -n "dbname > "
+read dbname
+echo -n "host > "
+read host
+echo -n "port > "
+read port
+echo -n "username > "
+read username
+echo -n "create file with name > "
+read filename
+pg_dump --dbname=cleannodeapi --host=localhost --port=5432 --username=postgres --file=create-tables.sql --verbose --clean --no-owner --schema-only --no-privileges
+echo "done"
+exit 0
