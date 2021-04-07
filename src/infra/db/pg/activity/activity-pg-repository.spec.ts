@@ -3,6 +3,7 @@ import { ActivityPostgresRepository } from './activity-pg-repository'
 import MockDate from 'mockdate'
 import { mockAddActivityParams } from '@/domain/test'
 import { UpdateActivityParams } from '@/domain/usecases/activity/update-activity'
+import env from '@/main/config/env'
 
 const mockUpdateActivityParams = (): UpdateActivityParams => ({
   accountId: 'account_id_other',
@@ -21,7 +22,7 @@ const makeSut = (): SutTypes => {
 describe('Activity Postgres Repository', () => {
   beforeAll(async () => {
     MockDate.set(new Date())
-    await PostgresHelper.connect(process.env.PG_URL)
+    await PostgresHelper.connect(env.pgUrl)
   })
 
   afterAll(async () => {
