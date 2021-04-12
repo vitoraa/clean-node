@@ -1,17 +1,15 @@
 import { ShipModel } from '@/domain/models/ship'
 import { LoadShips, LoadShipsParams } from '@/domain/usecases/ship/load-ships'
-import { HttpRequest } from '@/presentation/protocols'
 import { Validation } from '../../signup/signup-controller-protocols'
 import { LoadShipsController } from './load-ships-controller'
 import { badRequest, notFound, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { MissingParamError, ServerError } from '@/presentation/errors'
 import { throwError } from '@/domain/test'
 
-const makeFakeRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_ship',
-    ab: 20
-  }
+const makeFakeRequest = (): LoadShipsController.Request => ({
+  name: 'any_ship',
+  ab: 20,
+  imo: 'any_imo'
 })
 
 const makeFakeResponse = (): ShipModel[] => ([{
@@ -63,7 +61,7 @@ describe('Add Ship Controller', () => {
     const loadSpy = jest.spyOn(loadShipsStub, 'load')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
-    expect(loadSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(loadSpy).toHaveBeenCalledWith(httpRequest)
   })
 
   test('Should return 404 if LoadShips returns empty', async () => {
@@ -91,7 +89,7 @@ describe('Add Ship Controller', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest)
   })
 
   test('Should throws 500 if Validation throws', async () => {

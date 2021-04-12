@@ -4,20 +4,14 @@ import { AddActivity, AddActivityParams } from '@/domain/usecases/activity/add-a
 import { LoadShipById } from '@/domain/usecases/ship/load-ship-by-id'
 import { InvalidParamError, MissingParamError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { HttpRequest } from '@/presentation/protocols'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddActivityController } from './add-activity-controller'
 import MockDate from 'mockdate'
 import { mockShipModel, throwError } from '@/domain/test'
 
-const makeFakeRequest = (): HttpRequest => ({
-  params: {
-    shipId: 'any_id_params'
-  },
-  body: {
-    accountId: 'any_account',
-    shipId: 'any_ship'
-  }
+const makeFakeRequest = (): AddActivityController.Request => ({
+  accountId: 'any_account',
+  shipId: 'any_ship'
 })
 
 const makeFakeResponse = (): ActivityModel => ({
@@ -87,7 +81,7 @@ describe('Save Activity Controller', () => {
     const { sut, loadShipByIdStub } = makeSut()
     const validateSpy = jest.spyOn(loadShipByIdStub, 'loadById')
     await sut.handle(makeFakeRequest())
-    expect(validateSpy).toHaveBeenCalledWith('any_id_params')
+    expect(validateSpy).toHaveBeenCalledWith('any_ship')
   })
 
   test('Should return 403 if LoadShipById returns null', async () => {

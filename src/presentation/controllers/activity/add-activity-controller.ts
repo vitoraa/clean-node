@@ -2,7 +2,7 @@ import { AddActivity } from '@/domain/usecases/activity/add-activity'
 import { LoadShipById } from '@/domain/usecases/ship/load-ship-by-id'
 import { InvalidParamError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { Controller, HttpResponse } from '@/presentation/protocols'
 import { Validation } from '@/presentation/protocols/validation'
 
 export class AddActivityController implements Controller {
@@ -12,25 +12,32 @@ export class AddActivityController implements Controller {
     private readonly loadShipById: LoadShipById
   ) { }
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (request: AddActivityController.Request): Promise<HttpResponse> {
     try {
-      const error = this.validation.validate(httpRequest.body)
+      const error = this.validation.validate(request)
 
       if (error) {
         return badRequest(error)
       }
 
-      const ship = await this.loadShipById.loadById(httpRequest.params.shipId)
+      const ship = await this.loadShipById.loadById(request.shipId)
 
       if (!ship) {
         return forbidden(new InvalidParamError('shipId'))
       }
 
-      const activity = await this.addActivity.add(httpRequest.body)
+      const activity = await this.addActivity.add(request)
 
       return ok(activity)
     } catch (error) {
       return serverError(error)
     }
+  }
+}
+
+export namespace AddActivityController {
+  export type Request = {
+    shipId: string
+    accountId: string
   }
 }

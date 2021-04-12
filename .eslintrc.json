@@ -7,6 +7,8 @@
     "@typescript-eslint/consistent-type-definition": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/interface-over-type-literal": "off",
-    "@typescript-eslint/consistent-type-definitions": "off"
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "import/export": "off"
   }
 }
