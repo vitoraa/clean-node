@@ -1,5 +1,5 @@
 import { AuthenticationParams } from '@/presentation/controllers/login/login-controller-protocols'
-import { AccountModel, AddAccountParams } from '@/presentation/controllers/signup/signup-controller-protocols'
+import { AccountModel, AddAccount } from '@/presentation/controllers/signup/signup-controller-protocols'
 
 export const mockAccountModel = (): AccountModel => ({
   id: 'valid_id',
@@ -8,7 +8,7 @@ export const mockAccountModel = (): AccountModel => ({
   password: 'hashed_password'
 })
 
-export const mockAddAccountParams = (): AddAccountParams => ({
+export const mockAddAccountParams = (): AddAccount.Params => ({
   email: 'valid_email@com',
   name: 'valid_name',
   password: 'valid_password'

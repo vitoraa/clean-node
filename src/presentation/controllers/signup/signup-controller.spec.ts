@@ -1,9 +1,9 @@
 import { SignUpController } from './signup-controller'
 import { MissingParamError, ServerError, FieldInUseError } from '@/presentation/errors'
-import { AddAccount, AddAccountParams, AccountModel, Validation } from './signup-controller-protocols'
+import { AddAccount, Validation } from './signup-controller-protocols'
 import { badRequest, ok, serverError, forbidden } from '@/presentation/helpers/http/http-helper'
 import { Authentication, AuthenticationParams } from '../login/login-controller-protocols'
-import { mockAccountModel, throwError } from '@/domain/test'
+import { throwError } from '@/domain/test'
 
 const makeFakeRequest = (): SignUpController.Request => (
   {
@@ -23,8 +23,8 @@ type SutTypes = {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-      return mockAccountModel()
+    async add (account: AddAccount.Params): Promise<AddAccount.Result> {
+      return true
     }
   }
   return new AddAccountStub()
