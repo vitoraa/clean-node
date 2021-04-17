@@ -4,7 +4,7 @@ import { InsertActivityRepository, UpdateActivityRepository } from '../protocols
 
 export const mockInsertActivityRepository = (): InsertActivityRepository => {
   class InsertActivityRepositoryStub implements InsertActivityRepository {
-    async insert (activity: ActivityModel): Promise<ActivityModel> {
+    async insert (activity: InsertActivityRepository.Params): Promise<InsertActivityRepository.Result> {
       return mockActivityModel()
     }
   }

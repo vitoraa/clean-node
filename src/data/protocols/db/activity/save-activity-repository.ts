@@ -1,11 +1,20 @@
-import { ActivityModel } from '@/domain/models/activity'
-import { AddActivityParams } from '@/domain/usecases/activity/add-activity'
-import { UpdateActivityParams } from '@/domain/usecases/activity/update-activity'
+import { AddActivity } from '@/domain/usecases/activity/add-activity'
+import { UpdateActivity } from '@/domain/usecases/activity/update-activity'
 
 export interface InsertActivityRepository {
-  insert: (activity: AddActivityParams) => Promise<ActivityModel>
+  insert: (activity: InsertActivityRepository.Params) => Promise<InsertActivityRepository.Result>
 }
 
 export interface UpdateActivityRepository {
-  update: (activity: UpdateActivityParams, id: string) => Promise<ActivityModel>
+  update: (activity: UpdateActivityRepository.Params, id: string) => Promise<UpdateActivityRepository.Result>
+}
+
+export namespace InsertActivityRepository {
+  export type Params = AddActivity.Params
+  export type Result = AddActivity.Result
+}
+
+export namespace UpdateActivityRepository {
+  export type Params = UpdateActivity.Params
+  export type Result = UpdateActivity.Result
 }

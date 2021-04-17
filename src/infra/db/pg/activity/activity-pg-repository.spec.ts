@@ -2,10 +2,10 @@ import { PostgresHelper } from '../helpers/pg-helper'
 import { ActivityPostgresRepository } from './activity-pg-repository'
 import MockDate from 'mockdate'
 import { mockAddActivityParams } from '@/domain/test'
-import { UpdateActivityParams } from '@/domain/usecases/activity/update-activity'
 import env from '@/main/config/env'
+import { UpdateActivity } from '@/domain/usecases/activity/update-activity'
 
-const mockUpdateActivityParams = (): UpdateActivityParams => ({
+const mockUpdateActivityParams = (): UpdateActivity.Params => ({
   accountId: 'account_id_other',
   shipId: 'ship_id_other'
 })

@@ -1,6 +1,6 @@
 import { ActivityModel } from '@/domain/models/activity'
 import { ShipModel } from '@/domain/models/ship'
-import { AddActivity, AddActivityParams } from '@/domain/usecases/activity/add-activity'
+import { AddActivity } from '@/domain/usecases/activity/add-activity'
 import { LoadShipById } from '@/domain/usecases/ship/load-ship-by-id'
 import { InvalidParamError, MissingParamError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
@@ -32,7 +32,7 @@ const makeValidation = (): Validation => {
 
 const makeAddActivity = (): AddActivity => {
   class AddActivityStub implements AddActivity {
-    async add (data: AddActivityParams): Promise<ActivityModel> {
+    async add (data: AddActivity.Params): Promise<AddActivity.Result> {
       return makeFakeResponse()
     }
   }
