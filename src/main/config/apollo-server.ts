@@ -5,7 +5,7 @@ import typeDefs from '@/main/graphql/type-defs'
 import { GraphQLError } from 'graphql'
 
 const handleErrors = (response: any, errors: readonly GraphQLError[]): void => {
-  errors.forEach(error => {
+  errors?.forEach(error => {
     response.data = undefined
     if (checkError(error, 'UserInputError')) {
       response.http.status = 400
